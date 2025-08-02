@@ -1,0 +1,576 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		183550C42E3E5BFC000201CB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 183550A52E3E5BFA000201CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 183550AC2E3E5BFA000201CB;
+			remoteInfo = "GatorPark-swift";
+		};
+		183550CE2E3E5BFC000201CB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 183550A52E3E5BFA000201CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 183550AC2E3E5BFA000201CB;
+			remoteInfo = "GatorPark-swift";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		183550AD2E3E5BFA000201CB /* GatorPark-swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GatorPark-swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		183550C32E3E5BFC000201CB /* GatorPark-swiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GatorPark-swiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		183550CD2E3E5BFC000201CB /* GatorPark-swiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GatorPark-swiftUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		183550D52E3E5BFC000201CB /* Exceptions for "GatorPark-swift" folder in "GatorPark-swift" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 183550AC2E3E5BFA000201CB /* GatorPark-swift */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		183550AF2E3E5BFA000201CB /* GatorPark-swift */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				183550D52E3E5BFC000201CB /* Exceptions for "GatorPark-swift" folder in "GatorPark-swift" target */,
+			);
+			path = "GatorPark-swift";
+			sourceTree = "<group>";
+		};
+		183550C62E3E5BFC000201CB /* GatorPark-swiftTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "GatorPark-swiftTests";
+			sourceTree = "<group>";
+		};
+		183550D02E3E5BFC000201CB /* GatorPark-swiftUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "GatorPark-swiftUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		183550AA2E3E5BFA000201CB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		183550C02E3E5BFC000201CB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		183550CA2E3E5BFC000201CB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		183550A42E3E5BFA000201CB = {
+			isa = PBXGroup;
+			children = (
+				183550AF2E3E5BFA000201CB /* GatorPark-swift */,
+				183550C62E3E5BFC000201CB /* GatorPark-swiftTests */,
+				183550D02E3E5BFC000201CB /* GatorPark-swiftUITests */,
+				183550AE2E3E5BFA000201CB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		183550AE2E3E5BFA000201CB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				183550AD2E3E5BFA000201CB /* GatorPark-swift.app */,
+				183550C32E3E5BFC000201CB /* GatorPark-swiftTests.xctest */,
+				183550CD2E3E5BFC000201CB /* GatorPark-swiftUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		183550AC2E3E5BFA000201CB /* GatorPark-swift */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 183550D62E3E5BFC000201CB /* Build configuration list for PBXNativeTarget "GatorPark-swift" */;
+			buildPhases = (
+				183550A92E3E5BFA000201CB /* Sources */,
+				183550AA2E3E5BFA000201CB /* Frameworks */,
+				183550AB2E3E5BFA000201CB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				183550AF2E3E5BFA000201CB /* GatorPark-swift */,
+			);
+			name = "GatorPark-swift";
+			packageProductDependencies = (
+			);
+			productName = "GatorPark-swift";
+			productReference = 183550AD2E3E5BFA000201CB /* GatorPark-swift.app */;
+			productType = "com.apple.product-type.application";
+		};
+		183550C22E3E5BFC000201CB /* GatorPark-swiftTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 183550DB2E3E5BFC000201CB /* Build configuration list for PBXNativeTarget "GatorPark-swiftTests" */;
+			buildPhases = (
+				183550BF2E3E5BFC000201CB /* Sources */,
+				183550C02E3E5BFC000201CB /* Frameworks */,
+				183550C12E3E5BFC000201CB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				183550C52E3E5BFC000201CB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				183550C62E3E5BFC000201CB /* GatorPark-swiftTests */,
+			);
+			name = "GatorPark-swiftTests";
+			packageProductDependencies = (
+			);
+			productName = "GatorPark-swiftTests";
+			productReference = 183550C32E3E5BFC000201CB /* GatorPark-swiftTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		183550CC2E3E5BFC000201CB /* GatorPark-swiftUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 183550DE2E3E5BFC000201CB /* Build configuration list for PBXNativeTarget "GatorPark-swiftUITests" */;
+			buildPhases = (
+				183550C92E3E5BFC000201CB /* Sources */,
+				183550CA2E3E5BFC000201CB /* Frameworks */,
+				183550CB2E3E5BFC000201CB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				183550CF2E3E5BFC000201CB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				183550D02E3E5BFC000201CB /* GatorPark-swiftUITests */,
+			);
+			name = "GatorPark-swiftUITests";
+			packageProductDependencies = (
+			);
+			productName = "GatorPark-swiftUITests";
+			productReference = 183550CD2E3E5BFC000201CB /* GatorPark-swiftUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		183550A52E3E5BFA000201CB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					183550AC2E3E5BFA000201CB = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					183550C22E3E5BFC000201CB = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 183550AC2E3E5BFA000201CB;
+					};
+					183550CC2E3E5BFC000201CB = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 183550AC2E3E5BFA000201CB;
+					};
+				};
+			};
+			buildConfigurationList = 183550A82E3E5BFA000201CB /* Build configuration list for PBXProject "GatorPark-swift" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 183550A42E3E5BFA000201CB;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 183550AE2E3E5BFA000201CB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				183550AC2E3E5BFA000201CB /* GatorPark-swift */,
+				183550C22E3E5BFC000201CB /* GatorPark-swiftTests */,
+				183550CC2E3E5BFC000201CB /* GatorPark-swiftUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		183550AB2E3E5BFA000201CB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		183550C12E3E5BFC000201CB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		183550CB2E3E5BFC000201CB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		183550A92E3E5BFA000201CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		183550BF2E3E5BFC000201CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		183550C92E3E5BFC000201CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		183550C52E3E5BFC000201CB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 183550AC2E3E5BFA000201CB /* GatorPark-swift */;
+			targetProxy = 183550C42E3E5BFC000201CB /* PBXContainerItemProxy */;
+		};
+		183550CF2E3E5BFC000201CB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 183550AC2E3E5BFA000201CB /* GatorPark-swift */;
+			targetProxy = 183550CE2E3E5BFC000201CB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		183550D72E3E5BFC000201CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K6QXDUFVM7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "GatorPark-swift/Info.plist";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "conan.GatorPark-swift";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		183550D82E3E5BFC000201CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K6QXDUFVM7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "GatorPark-swift/Info.plist";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "conan.GatorPark-swift";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		183550D92E3E5BFC000201CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = K6QXDUFVM7;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		183550DA2E3E5BFC000201CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = K6QXDUFVM7;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		183550DC2E3E5BFC000201CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K6QXDUFVM7;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "conan.GatorPark-swiftTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GatorPark-swift.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GatorPark-swift";
+			};
+			name = Debug;
+		};
+		183550DD2E3E5BFC000201CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K6QXDUFVM7;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "conan.GatorPark-swiftTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GatorPark-swift.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GatorPark-swift";
+			};
+			name = Release;
+		};
+		183550DF2E3E5BFC000201CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K6QXDUFVM7;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "conan.GatorPark-swiftUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "GatorPark-swift";
+			};
+			name = Debug;
+		};
+		183550E02E3E5BFC000201CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = K6QXDUFVM7;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "conan.GatorPark-swiftUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "GatorPark-swift";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		183550A82E3E5BFA000201CB /* Build configuration list for PBXProject "GatorPark-swift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				183550D92E3E5BFC000201CB /* Debug */,
+				183550DA2E3E5BFC000201CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		183550D62E3E5BFC000201CB /* Build configuration list for PBXNativeTarget "GatorPark-swift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				183550D72E3E5BFC000201CB /* Debug */,
+				183550D82E3E5BFC000201CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		183550DB2E3E5BFC000201CB /* Build configuration list for PBXNativeTarget "GatorPark-swiftTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				183550DC2E3E5BFC000201CB /* Debug */,
+				183550DD2E3E5BFC000201CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		183550DE2E3E5BFC000201CB /* Build configuration list for PBXNativeTarget "GatorPark-swiftUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				183550DF2E3E5BFC000201CB /* Debug */,
+				183550E02E3E5BFC000201CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 183550A52E3E5BFA000201CB /* Project object */;
+}
