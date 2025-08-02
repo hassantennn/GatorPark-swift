@@ -145,11 +145,11 @@ extension ViewController: MKMapViewDelegate {
 
             let size: CGFloat = 20
             let circleView = UIView(frame: CGRect(x: -size/2, y: -size/2, width: size, height: size))
+            circleView.tag = 100
             circleView.layer.cornerRadius = size / 2
             circleView.layer.borderColor = UIColor.white.cgColor
             circleView.layer.borderWidth = 2
             circleView.clipsToBounds = true
-
             let garage = garageAnnotation.garage
             let isFull = garage.currentCount >= garage.capacity
             circleView.backgroundColor = isFull ? .red : .blue
@@ -169,6 +169,11 @@ extension ViewController: MKMapViewDelegate {
             annotationView?.rightCalloutAccessoryView = infoButton
         } else {
             annotationView?.annotation = annotation
+            if let circleView = annotationView?.viewWithTag(100) {
+                let garage = garageAnnotation.garage
+                let isFull = garage.currentCount >= garage.capacity
+                circleView.backgroundColor = isFull ? .red : .blue
+            }
         }
 
         return annotationView
@@ -189,7 +194,8 @@ extension ViewController: MKMapViewDelegate {
             if let index = self.garages.firstIndex(where: { $0.name == garage.name }) {
                 if self.garages[index].currentCount < self.garages[index].capacity {
                     self.garages[index].currentCount += 1
-                    self.mapView.removeAnnotations(self.mapView.annotations)
+                    let nonUserAnnotations = self.mapView.annotations.filter { !($0 is MKUserLocation) }
+                    self.mapView.removeAnnotations(nonUserAnnotations)
                     self.addGaragePins()
                 }
             }
@@ -198,7 +204,8 @@ extension ViewController: MKMapViewDelegate {
             if let index = self.garages.firstIndex(where: { $0.name == garage.name }) {
                 if self.garages[index].currentCount > 0 {
                     self.garages[index].currentCount -= 1
-                    self.mapView.removeAnnotations(self.mapView.annotations)
+                    let nonUserAnnotations = self.mapView.annotations.filter { !($0 is MKUserLocation) }
+                    self.mapView.removeAnnotations(nonUserAnnotations)
                     self.addGaragePins()
                 }
             }
