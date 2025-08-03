@@ -96,12 +96,22 @@ class ViewController: UIViewController {
         searchBar.delegate = self
         searchBar.showsCancelButton = true
         searchBar.placeholder = "Search garages or open spots"
+        searchBar.searchBarStyle = .minimal
+        searchBar.backgroundImage = UIImage()
+
+        if #available(iOS 13.0, *) {
+            let textField = searchBar.searchTextField
+            textField.backgroundColor = .systemBackground
+            textField.layer.cornerRadius = 10
+            textField.layer.masksToBounds = true
+        }
+
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(searchBar)
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8)
         ])
     }
 
