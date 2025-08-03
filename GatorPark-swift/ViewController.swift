@@ -5,6 +5,7 @@ class ViewController: UIViewController {
 
     let mapView = MKMapView()
     let recenterButton = UIButton(type: .system)
+    let searchBar = UISearchBar()
 
     struct Garage {
         let name: String
@@ -32,10 +33,12 @@ class ViewController: UIViewController {
 
     // Data source: exact coordinates for each garage
     var garages: [Garage] = []
+    private var allGarages: [Garage] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMap()
+        setupSearchBar()
         setupGarages()  // load coordinate data
         addGaragePins()  // drop pins
         addZoomButtons()
@@ -89,6 +92,19 @@ class ViewController: UIViewController {
         mapView.showsUserLocation = true
     }
 
+    private func setupSearchBar() {
+        searchBar.delegate = self
+        searchBar.showsCancelButton = true
+        searchBar.placeholder = "Search garages or open spots"
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchBar)
+        NSLayoutConstraint.activate([
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+    }
+
     private func setupGarages() {
         // Exact lat/lng from user
         garages = [
@@ -116,6 +132,7 @@ class ViewController: UIViewController {
             Garage(name: "Stadium 3", coordinate: CLLocationCoordinate2D(latitude: 29.649791, longitude: -82.350006), currentCount: 0),
             Garage(name: "Tigert Parking", coordinate: CLLocationCoordinate2D(latitude: 29.649380, longitude: -82.340550), currentCount: 0)
         ]
+        allGarages = garages
     }
 
     private func addGaragePins() {
@@ -234,5 +251,37 @@ extension ViewController: MKMapViewDelegate {
             annView.annotation = garageAnnotation
             mapView.selectAnnotation(garageAnnotation, animated: false)
         }
+    }
+}
+
+extension ViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        guard let text = searchBar.text, !text.isEmpty else { return }
+
+        if let spots = Int(text) {
+            garages = allGarages.filter { $0.capacity - $0.currentCount > spots }
+            addGaragePins()
+        } else if let garage = allGarages.first(where: { $0.name.lowercased().contains(text.lowercased()) }) {
+            garages = allGarages
+            addGaragePins()
+            let region = MKCoordinateRegion(center: garage.coordinate,
+                                            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+            mapView.setRegion(region, animated: true)
+        }
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            garages = allGarages
+            addGaragePins()
+        }
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = nil
+        searchBar.resignFirstResponder()
+        garages = allGarages
+        addGaragePins()
     }
 }
