@@ -13,8 +13,6 @@ class ViewController: UIViewController {
         let name: String
         let coordinate: CLLocationCoordinate2D
         var currentCount: Int
-        /// The maximum number of vehicles the garage can hold.
-        /// Defaults to a small value for easier testing.
         var capacity: Int = 2
     }
 
