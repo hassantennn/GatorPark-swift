@@ -114,13 +114,18 @@ class ViewController: UIViewController {
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8)
         ])
     }
+    private let suggestionCellID = "SuggestionCell"
 
     private func setupSuggestionsTableView() {
         suggestionsTableView.isHidden = true
         suggestionsTableView.delegate = self
         suggestionsTableView.dataSource = self
+        suggestionsTableView.backgroundColor = .systemBackground
+        suggestionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: suggestionCellID)
         suggestionsTableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(suggestionsTableView)
+        view.bringSubviewToFront(suggestionsTableView)
+
         NSLayoutConstraint.activate([
             suggestionsTableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
             suggestionsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -338,7 +343,8 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") ?? UITableViewCell(style: .default, reuseIdentifier: "cell")
+        let cell = tableView.dequeueReusableCell(withIdentifier: suggestionCellID, for: indexPath)
+
         cell.textLabel?.text = filteredGarages[indexPath.row].name
         return cell
     }
