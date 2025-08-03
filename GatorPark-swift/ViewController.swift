@@ -9,70 +9,114 @@ class ViewController: UIViewController {
     struct Garage {
         let name: String
         let coordinate: CLLocationCoordinate2D
-        let capacity: Int
         var currentCount: Int
-        let hours: String
     }
 
+    // Data source: exact coordinates for each garage
     var garages: [Garage] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMap()
-        setupGarages()
-        addGaragePins()
+        setupGarages()  // load coordinate data
+        addGaragePins()  // drop pins
         addZoomButtons()
         addRecenterButton()
     }
 
-    func setupMap() {
+    private func setupMap() {
         mapView.frame = view.bounds
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        let center = CLLocationCoordinate2D(latitude: 29.6467, longitude: -82.3481)
+        // Dark, muted Apple Maps style
+        if #available(iOS 13.0, *) {
+            mapView.overrideUserInterfaceStyle = .dark
+            let config = MKStandardMapConfiguration(elevationStyle: .realistic,
+                                                    emphasisStyle: .muted)
+            mapView.preferredConfiguration = config
+        } else {
+            mapView.mapType = .standard
+        }
+
+        // Initial region centered on campus
         let region = MKCoordinateRegion(
-            center: center,
-            span: MKCoordinateSpan(latitudeDelta: 0.035, longitudeDelta: 0.03)
+            center: CLLocationCoordinate2D(latitude: 29.6467, longitude: -82.3481),
+            span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2)
         )
         mapView.setRegion(region, animated: true)
 
-        let nwCorner = MKMapPoint(CLLocationCoordinate2D(latitude: 29.7050, longitude: -82.3900))
-        let seCorner = MKMapPoint(CLLocationCoordinate2D(latitude: 29.6400, longitude: -82.2950))
-
-        let width = abs(seCorner.x - nwCorner.x)
-        let height = abs(seCorner.y - nwCorner.y)
-        let boundaryRect = MKMapRect(x: nwCorner.x, y: seCorner.y, width: width, height: height)
-
+        // Allow wide zoom range
+        let boundaryPoints = [
+            CLLocationCoordinate2D(latitude: 29.7050, longitude: -82.3900),
+            CLLocationCoordinate2D(latitude: 29.6400, longitude: -82.2950)
+        ]
+        let mapPoints = boundaryPoints.map { MKMapPoint($0) }
+        let xs = mapPoints.map { $0.x }
+        let ys = mapPoints.map { $0.y }
+        let boundaryRect = MKMapRect(
+            x: xs.min()!,
+            y: ys.min()!,
+            width: xs.max()! - xs.min()!,
+            height: ys.max()! - ys.min()!
+        )
         mapView.setCameraBoundary(MKMapView.CameraBoundary(mapRect: boundaryRect), animated: false)
-        let zoomRange = MKMapView.CameraZoomRange(minCenterCoordinateDistance: 500, maxCenterCoordinateDistance: 7000)
-        mapView.setCameraZoomRange(zoomRange, animated: false)
+        mapView.setCameraZoomRange(
+            MKMapView.CameraZoomRange(minCenterCoordinateDistance: 500,
+                                      maxCenterCoordinateDistance: 200_000),
+            animated: false
+        )
 
         mapView.delegate = self
         mapView.showsUserLocation = true
     }
 
-    func setupGarages() {
+    private func setupGarages() {
+        // Exact lat/lng from user
         garages = [
-            Garage(name: "Garage 5", coordinate: CLLocationCoordinate2D(latitude: 29.6485, longitude: -82.3460), capacity: 8, currentCount: 6, hours: "7 AM – 11 PM"),
-            Garage(name: "Garage 7", coordinate: CLLocationCoordinate2D(latitude: 29.6478, longitude: -82.3432), capacity: 8, currentCount: 3, hours: "6 AM – 10 PM"),
-            Garage(name: "Garage 9", coordinate: CLLocationCoordinate2D(latitude: 29.6513, longitude: -82.3419), capacity: 8, currentCount: 8, hours: "Open 24 hours"),
-            Garage(name: "Garage 10", coordinate: CLLocationCoordinate2D(latitude: 29.6445, longitude: -82.3390), capacity: 8, currentCount: 8, hours: "7 AM – 9 PM"),
-            Garage(name: "Garage 11", coordinate: CLLocationCoordinate2D(latitude: 29.6455, longitude: -82.3365), capacity: 8, currentCount: 5, hours: "6 AM – 11 PM"),
-            Garage(name: "Garage 12 (Welcome Center)", coordinate: CLLocationCoordinate2D(latitude: 29.6467, longitude: -82.3481), capacity: 8, currentCount: 2, hours: "8 AM – 5 PM"),
-            Garage(name: "Garage 13", coordinate: CLLocationCoordinate2D(latitude: 29.6525, longitude: -82.3485), capacity: 8, currentCount: 1, hours: "7 AM – 7 PM"),
-            Garage(name: "Garage 14", coordinate: CLLocationCoordinate2D(latitude: 29.6455, longitude: -82.3470), capacity: 8, currentCount: 7, hours: "Open 24 hours"),
-            Garage(name: "Library West Garage", coordinate: CLLocationCoordinate2D(latitude: 29.6519, longitude: -82.3432), capacity: 8, currentCount: 0, hours: "6 AM – Midnight")
+            Garage(name: "Rawlings", coordinate: CLLocationCoordinate2D(latitude: 29.645255, longitude: -82.342954), currentCount: 0),
+            Garage(name: "Reitz Garage", coordinate: CLLocationCoordinate2D(latitude: 29.645568, longitude: -82.348437), currentCount: 0),
+            Garage(name: "McCarty", coordinate: CLLocationCoordinate2D(latitude: 29.645974, longitude: -82.344066), currentCount: 0),
+            Garage(name: "Garage 5", coordinate: CLLocationCoordinate2D(latitude: 29.643310, longitude: -82.351471), currentCount: 0),
+            Garage(name: "Garage 14", coordinate: CLLocationCoordinate2D(latitude: 29.642376, longitude: -82.351335), currentCount: 0),
+            Garage(name: "NPB", coordinate: CLLocationCoordinate2D(latitude: 29.641503, longitude: -82.351335), currentCount: 0),
+            Garage(name: "Garage 13", coordinate: CLLocationCoordinate2D(latitude: 29.640541, longitude: -82.349703), currentCount: 0),
+            Garage(name: "Garage 11", coordinate: CLLocationCoordinate2D(latitude: 29.636293, longitude: -82.368394), currentCount: 0),
+            Garage(name: "Garage 3", coordinate: CLLocationCoordinate2D(latitude: 29.638681, longitude: -82.347755), currentCount: 0),
+            Garage(name: "Garage 10", coordinate: CLLocationCoordinate2D(latitude: 29.640786, longitude: -82.341755), currentCount: 0),
+            Garage(name: "Garage 1", coordinate: CLLocationCoordinate2D(latitude: 29.640989, longitude: -82.342083), currentCount: 0), // converted DMS to decimal
+            Garage(name: "Health East", coordinate: CLLocationCoordinate2D(latitude: 29.640946, longitude: -82.340770), currentCount: 0),
+            Garage(name: "Garage 2", coordinate: CLLocationCoordinate2D(latitude: 29.638830, longitude: -82.346726), currentCount: 0),
+            Garage(name: "Southwest 1", coordinate: CLLocationCoordinate2D(latitude: 29.637171, longitude: -82.368639), currentCount: 0),
+            Garage(name: "Southwest 2", coordinate: CLLocationCoordinate2D(latitude: 29.636731, longitude: -82.364778), currentCount: 0),
+            Garage(name: "Maguire Parking", coordinate: CLLocationCoordinate2D(latitude: 29.640755, longitude: -82.368668), currentCount: 0),
+            Garage(name: "Southwest Tennis", coordinate: CLLocationCoordinate2D(latitude: 29.638010, longitude: -82.367084), currentCount: 0),
+            Garage(name: "Southwest Lot 4", coordinate: CLLocationCoordinate2D(latitude: 29.637503, longitude: -82.367424), currentCount: 0),
+            Garage(name: "Garage 7", coordinate: CLLocationCoordinate2D(latitude: 29.650583, longitude: -82.350972), currentCount: 0), // DMS converted
+            Garage(name: "Stadium 1", coordinate: CLLocationCoordinate2D(latitude: 29.651728, longitude: -82.349180), currentCount: 0),
+            Garage(name: "Stadium 2", coordinate: CLLocationCoordinate2D(latitude: 29.649024, longitude: -82.347825), currentCount: 0),
+            Garage(name: "Stadium 3", coordinate: CLLocationCoordinate2D(latitude: 29.649791, longitude: -82.350006), currentCount: 0),
+            Garage(name: "Tigert Parking", coordinate: CLLocationCoordinate2D(latitude: 29.649380, longitude: -82.340550), currentCount: 0)
         ]
     }
 
-    func addGaragePins() {
+    private func addGaragePins() {
+        mapView.removeAnnotations(mapView.annotations.filter { !($0 is MKUserLocation) })
         for garage in garages {
-            let annotation = GarageAnnotation(garage: garage)
+            let annotation = MKPointAnnotation()
+            annotation.title = garage.name
+            annotation.subtitle = "Spaces: \(garage.currentCount)"
+            annotation.coordinate = garage.coordinate
             mapView.addAnnotation(annotation)
+        }
+        // Fit map to show all pins
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let pins = self.mapView.annotations.filter { !($0 is MKUserLocation) }
+            self.mapView.showAnnotations(pins, animated: true)
         }
     }
 
-    func addZoomButtons() {
+    private func addZoomButtons() {
         let zoomInButton = UIButton(frame: CGRect(x: view.bounds.width - 60, y: 100, width: 40, height: 40))
         zoomInButton.setTitle("+", for: .normal)
         zoomInButton.backgroundColor = .systemBlue
@@ -88,7 +132,7 @@ class ViewController: UIViewController {
         view.addSubview(zoomOutButton)
     }
 
-    func addRecenterButton() {
+    private func addRecenterButton() {
         recenterButton.setTitle("📍", for: .normal)
         recenterButton.backgroundColor = .systemGreen
         recenterButton.layer.cornerRadius = 20
@@ -98,119 +142,40 @@ class ViewController: UIViewController {
         view.addSubview(recenterButton)
     }
 
-    @objc func recenterMap() {
-        if let userLocation = mapView.userLocation.location?.coordinate {
-            let region = MKCoordinateRegion(center: userLocation, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-            mapView.setRegion(region, animated: true)
-        }
-    }
-
-    @objc func zoomIn() {
-        var region = mapView.region
-        region.span.latitudeDelta *= 0.5
-        region.span.longitudeDelta *= 0.5
+    @objc private func recenterMap() {
+        guard let loc = mapView.userLocation.location?.coordinate else { return }
+        let region = MKCoordinateRegion(center: loc, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         mapView.setRegion(region, animated: true)
     }
 
-    @objc func zoomOut() {
-        var region = mapView.region
-        region.span.latitudeDelta *= 2.0
-        region.span.longitudeDelta *= 2.0
-        mapView.setRegion(region, animated: true)
+    @objc private func zoomIn() {
+        var r = mapView.region
+        r.span.latitudeDelta *= 0.5
+        r.span.longitudeDelta *= 0.5
+        mapView.setRegion(r, animated: true)
     }
-}
 
-class GarageAnnotation: MKPointAnnotation {
-    let garage: ViewController.Garage
-
-    init(garage: ViewController.Garage) {
-        self.garage = garage
-        super.init()
-        self.coordinate = garage.coordinate
-        self.title = garage.name
-        self.subtitle = "\(garage.currentCount) / \(garage.capacity)"
+    @objc private func zoomOut() {
+        var r = mapView.region
+        r.span.latitudeDelta *= 2
+        r.span.longitudeDelta *= 2
+        mapView.setRegion(r, animated: true)
     }
 }
 
 extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard let garageAnnotation = annotation as? GarageAnnotation else { return nil }
-
-        let identifier = "GarageCircle"
-
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
-        if annotationView == nil {
-            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            annotationView?.canShowCallout = true
-
-            let size: CGFloat = 20
-            let circleView = UIView(frame: CGRect(x: -size/2, y: -size/2, width: size, height: size))
-            circleView.tag = 100
-            circleView.layer.cornerRadius = size / 2
-            circleView.layer.borderColor = UIColor.white.cgColor
-            circleView.layer.borderWidth = 2
-            circleView.clipsToBounds = true
-            let garage = garageAnnotation.garage
-            let isFull = garage.currentCount >= garage.capacity
-            circleView.backgroundColor = isFull ? .red : .blue
-
-            let pulse = CABasicAnimation(keyPath: "transform.scale")
-            pulse.fromValue = 1.0
-            pulse.toValue = 1.2
-            pulse.duration = 1.0
-            pulse.autoreverses = true
-            pulse.repeatCount = .infinity
-            pulse.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            circleView.layer.add(pulse, forKey: "pulse")
-
-            annotationView?.addSubview(circleView)
-
-            let infoButton = UIButton(type: .detailDisclosure)
-            annotationView?.rightCalloutAccessoryView = infoButton
+        guard !(annotation is MKUserLocation) else { return nil }
+        let id = "Garage"
+        var view = mapView.dequeueReusableAnnotationView(withIdentifier: id) as? MKMarkerAnnotationView
+        if view == nil {
+            view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: id)
+            view?.canShowCallout = true
+            view?.markerTintColor = .systemBlue
+            view?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         } else {
-            annotationView?.annotation = annotation
-            if let circleView = annotationView?.viewWithTag(100) {
-                let garage = garageAnnotation.garage
-                let isFull = garage.currentCount >= garage.capacity
-                circleView.backgroundColor = isFull ? .red : .blue
-            }
+            view?.annotation = annotation
         }
-
-        return annotationView
-    }
-
-    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        guard let garageAnnotation = view.annotation as? GarageAnnotation else { return }
-
-        let garage = garageAnnotation.garage
-        let message = "Operating Hours: \(garage.hours)\nCapacity: \(garage.currentCount) / \(garage.capacity)"
-
-        let alert = UIAlertController(
-            title: garage.name,
-            message: message,
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "Check In", style: .default, handler: { _ in
-            if let index = self.garages.firstIndex(where: { $0.name == garage.name }) {
-                if self.garages[index].currentCount < self.garages[index].capacity {
-                    self.garages[index].currentCount += 1
-                    let nonUserAnnotations = self.mapView.annotations.filter { !($0 is MKUserLocation) }
-                    self.mapView.removeAnnotations(nonUserAnnotations)
-                    self.addGaragePins()
-                }
-            }
-        }))
-        alert.addAction(UIAlertAction(title: "Check Out", style: .default, handler: { _ in
-            if let index = self.garages.firstIndex(where: { $0.name == garage.name }) {
-                if self.garages[index].currentCount > 0 {
-                    self.garages[index].currentCount -= 1
-                    let nonUserAnnotations = self.mapView.annotations.filter { !($0 is MKUserLocation) }
-                    self.mapView.removeAnnotations(nonUserAnnotations)
-                    self.addGaragePins()
-                }
-            }
-        }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        present(alert, animated: true)
+        return view
     }
 }
