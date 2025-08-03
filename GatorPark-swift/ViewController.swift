@@ -12,6 +12,18 @@ class ViewController: UIViewController {
         var currentCount: Int
     }
 
+    class GarageAnnotation: NSObject, MKAnnotation {
+        let garage: Garage
+        var coordinate: CLLocationCoordinate2D { garage.coordinate }
+        var title: String? { garage.name }
+        var subtitle: String? { "Spaces: \(garage.currentCount)" }
+        var isFull: Bool { garage.currentCount == 0 }
+
+        init(garage: Garage) {
+            self.garage = garage
+        }
+    }
+
     // Data source: exact coordinates for each garage
     var garages: [Garage] = []
 
@@ -103,10 +115,7 @@ class ViewController: UIViewController {
     private func addGaragePins() {
         mapView.removeAnnotations(mapView.annotations.filter { !($0 is MKUserLocation) })
         for garage in garages {
-            let annotation = MKPointAnnotation()
-            annotation.title = garage.name
-            annotation.subtitle = "Spaces: \(garage.currentCount)"
-            annotation.coordinate = garage.coordinate
+            let annotation = GarageAnnotation(garage: garage)
             mapView.addAnnotation(annotation)
         }
         // Fit map to show all pins
@@ -167,14 +176,17 @@ extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard !(annotation is MKUserLocation) else { return nil }
         let id = "Garage"
-        var view = mapView.dequeueReusableAnnotationView(withIdentifier: id) as? MKMarkerAnnotationView
+        var view = mapView.dequeueReusableAnnotationView(withIdentifier: id)
         if view == nil {
-            view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: id)
+            view = MKAnnotationView(annotation: annotation, reuseIdentifier: id)
             view?.canShowCallout = true
-            view?.markerTintColor = .systemBlue
-            view?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+            view?.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+            view?.layer.cornerRadius = 10
         } else {
             view?.annotation = annotation
+        }
+        if let garageAnnotation = annotation as? GarageAnnotation {
+            view?.backgroundColor = garageAnnotation.isFull ? .systemRed : .systemBlue
         }
         return view
     }
