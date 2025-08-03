@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     }
 
     class GarageAnnotation: NSObject, MKAnnotation {
-        let garage: Garage
+        var garage: Garage
         var coordinate: CLLocationCoordinate2D { garage.coordinate }
         var title: String? { garage.name }
         var subtitle: String? { "Spaces: \(garage.currentCount)/\(garage.capacity)" }
@@ -188,6 +188,22 @@ extension ViewController: MKMapViewDelegate {
             view?.canShowCallout = true
             view?.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
             view?.layer.cornerRadius = 10
+
+            let checkIn = UIButton(type: .system)
+            checkIn.setTitle("In", for: .normal)
+            checkIn.setTitleColor(.white, for: .normal)
+            checkIn.backgroundColor = .systemGreen
+            checkIn.frame = CGRect(x: 0, y: 0, width: 44, height: 30)
+            checkIn.layer.cornerRadius = 5
+            view?.leftCalloutAccessoryView = checkIn
+
+            let checkOut = UIButton(type: .system)
+            checkOut.setTitle("Out", for: .normal)
+            checkOut.setTitleColor(.white, for: .normal)
+            checkOut.backgroundColor = .systemOrange
+            checkOut.frame = CGRect(x: 0, y: 0, width: 44, height: 30)
+            checkOut.layer.cornerRadius = 5
+            view?.rightCalloutAccessoryView = checkOut
         } else {
             view?.annotation = annotation
         }
@@ -195,5 +211,28 @@ extension ViewController: MKMapViewDelegate {
             view?.backgroundColor = garageAnnotation.isFull ? .systemRed : .systemBlue
         }
         return view
+    }
+
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        guard let garageAnnotation = view.annotation as? GarageAnnotation,
+              let index = garages.firstIndex(where: { $0.name == garageAnnotation.garage.name }) else { return }
+
+        if control == view.leftCalloutAccessoryView {
+            if garages[index].currentCount < garages[index].capacity {
+                garages[index].currentCount += 1
+                garageAnnotation.garage.currentCount = garages[index].currentCount
+            }
+        } else if control == view.rightCalloutAccessoryView {
+            if garages[index].currentCount > 0 {
+                garages[index].currentCount -= 1
+                garageAnnotation.garage.currentCount = garages[index].currentCount
+            }
+        }
+
+        if let annView = mapView.view(for: garageAnnotation) {
+            annView.backgroundColor = garageAnnotation.isFull ? .systemRed : .systemBlue
+            annView.annotation = garageAnnotation
+            mapView.selectAnnotation(garageAnnotation, animated: false)
+        }
     }
 }
