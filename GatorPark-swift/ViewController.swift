@@ -6,6 +6,8 @@ class ViewController: UIViewController {
     let mapView = MKMapView()
     let recenterButton = UIButton(type: .system)
     let searchBar = UISearchBar()
+    let suggestionsTableView = UITableView()
+    private var filteredGarages: [Garage] = []
 
     struct Garage {
         let name: String
@@ -36,6 +38,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         setupMap()
         setupSearchBar()
+        setupSuggestionsTableView()
         setupGarages()  // load coordinate data
         addGaragePins()  // drop pins
         addZoomButtons()
@@ -109,6 +112,25 @@ class ViewController: UIViewController {
             searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8)
+        ])
+    }
+
+    private let suggestionCellID = "SuggestionCell"
+
+    private func setupSuggestionsTableView() {
+        suggestionsTableView.isHidden = true
+        suggestionsTableView.delegate = self
+        suggestionsTableView.dataSource = self
+        suggestionsTableView.backgroundColor = .systemBackground
+        suggestionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: suggestionCellID)
+        suggestionsTableView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(suggestionsTableView)
+        view.bringSubviewToFront(suggestionsTableView)
+        NSLayoutConstraint.activate([
+            suggestionsTableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            suggestionsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            suggestionsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            suggestionsTableView.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
 
@@ -263,10 +285,7 @@ extension ViewController: MKMapViewDelegate {
 }
 
 extension ViewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-        guard let text = searchBar.text, !text.isEmpty else { return }
-
+    private func performSearch(text: String) {
         if let spots = Int(text) {
             garages = allGarages.filter { $0.capacity - $0.currentCount > spots }
             addGaragePins()
@@ -285,18 +304,55 @@ extension ViewController: UISearchBarDelegate {
             }
         }
     }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        suggestionsTableView.isHidden = true
+        guard let text = searchBar.text, !text.isEmpty else { return }
+        performSearch(text: text)
+    }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
+            filteredGarages.removeAll()
+            suggestionsTableView.isHidden = true
             garages = allGarages
             addGaragePins()
+        } else if Int(searchText) == nil {
+            filteredGarages = allGarages.filter { $0.name.lowercased().contains(searchText.lowercased()) }
+            suggestionsTableView.isHidden = filteredGarages.isEmpty
+            suggestionsTableView.reloadData()
+        } else {
+            filteredGarages.removeAll()
+            suggestionsTableView.isHidden = true
         }
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = nil
         searchBar.resignFirstResponder()
+        filteredGarages.removeAll()
+        suggestionsTableView.isHidden = true
         garages = allGarages
         addGaragePins()
+    }
+}
+
+extension ViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        filteredGarages.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: suggestionCellID, for: indexPath)
+        cell.textLabel?.text = filteredGarages[indexPath.row].name
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let garage = filteredGarages[indexPath.row]
+        searchBar.text = garage.name
+        suggestionsTableView.isHidden = true
+        searchBar.resignFirstResponder()
+        performSearch(text: garage.name)
     }
 }
