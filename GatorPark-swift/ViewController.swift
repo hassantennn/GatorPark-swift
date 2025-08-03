@@ -10,13 +10,14 @@ class ViewController: UIViewController {
         let name: String
         let coordinate: CLLocationCoordinate2D
         var currentCount: Int
+        var capacity: Int = 100
     }
 
     class GarageAnnotation: NSObject, MKAnnotation {
         let garage: Garage
         var coordinate: CLLocationCoordinate2D { garage.coordinate }
         var title: String? { garage.name }
-        var subtitle: String? { "Spaces: \(garage.currentCount)" }
+        var subtitle: String? { "Spaces: \(garage.currentCount)/\(garage.capacity)" }
         var isFull: Bool { garage.currentCount == 0 }
 
         init(garage: Garage) {
