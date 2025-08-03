@@ -253,10 +253,8 @@ extension ViewController: MKMapViewDelegate {
             view?.annotation = annotation
         }
         if let garageAnnotation = annotation as? GarageAnnotation {
-            // Display a red circle regardless of garage availability.
-            // Full garages remain red and non-full garages are also red.
-            // This removes the previous blue state.
-            view?.backgroundColor = .systemRed
+            // Reflect the garage availability with annotation color.
+            view?.backgroundColor = garageAnnotation.isFull ? .systemRed : .systemBlue
         }
         return view
     }
