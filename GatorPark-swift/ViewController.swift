@@ -21,9 +21,6 @@ class ViewController: UIViewController {
         var coordinate: CLLocationCoordinate2D { garage.coordinate }
         var title: String? { garage.name }
         var subtitle: String? { "Spaces: \(garage.currentCount)/\(garage.capacity)" }
-        /// Indicates whether the garage has reached its capacity.
-        /// A garage is considered full when the number of occupied spaces is
-        /// greater than or equal to its total capacity.
         var isFull: Bool { garage.currentCount >= garage.capacity }
 
         init(garage: Garage) {
