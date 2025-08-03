@@ -278,6 +278,13 @@ extension ViewController: UISearchBarDelegate {
             let region = MKCoordinateRegion(center: garage.coordinate,
                                             span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
             mapView.setRegion(region, animated: true)
+            if let annotation = mapView.annotations.first(where: {
+                ($0 as? GarageAnnotation)?.garage.name == garage.name
+            }) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                    self?.mapView.selectAnnotation(annotation, animated: true)
+                }
+            }
         }
     }
 
