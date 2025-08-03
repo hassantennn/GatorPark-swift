@@ -142,13 +142,14 @@ class ViewController: UIViewController {
         allGarages = garages
     }
 
-    private func addGaragePins() {
+    private func addGaragePins(fitAll: Bool = true) {
         mapView.removeAnnotations(mapView.annotations.filter { !($0 is MKUserLocation) })
         for garage in garages {
             let annotation = GarageAnnotation(garage: garage)
             mapView.addAnnotation(annotation)
         }
-        // Fit map to show all pins
+        // Fit map to show all pins if requested
+        guard fitAll else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             let pins = self.mapView.annotations.filter { !($0 is MKUserLocation) }
             self.mapView.showAnnotations(pins, animated: true)
@@ -271,7 +272,7 @@ extension ViewController: UISearchBarDelegate {
             addGaragePins()
         } else if let garage = allGarages.first(where: { $0.name.lowercased().contains(text.lowercased()) }) {
             garages = allGarages
-            addGaragePins()
+            addGaragePins(fitAll: false)
             let region = MKCoordinateRegion(center: garage.coordinate,
                                             span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
             mapView.setRegion(region, animated: true)
