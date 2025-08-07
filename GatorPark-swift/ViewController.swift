@@ -231,8 +231,14 @@ extension ViewController: MKMapViewDelegate {
         if view == nil {
             view = MKAnnotationView(annotation: annotation, reuseIdentifier: id)
             view?.canShowCallout = true
-            view?.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-            view?.layer.cornerRadius = 10
+            // Increase tappable area to meet Apple's 44x44pt recommendation while keeping the visual dot small.
+            view?.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+            view?.backgroundColor = .clear
+
+            let dot = UIView(frame: CGRect(x: 12, y: 12, width: 20, height: 20))
+            dot.layer.cornerRadius = 10
+            dot.tag = 100 // Used later to update the color based on availability
+            view?.addSubview(dot)
 
             let checkIn = UIButton(type: .system)
             checkIn.setTitle("In", for: .normal)
@@ -252,9 +258,10 @@ extension ViewController: MKMapViewDelegate {
         } else {
             view?.annotation = annotation
         }
-        if let garageAnnotation = annotation as? GarageAnnotation {
-            // Reflect the garage availability with annotation color.
-            view?.backgroundColor = garageAnnotation.isFull ? .systemRed : .systemBlue
+        if let garageAnnotation = annotation as? GarageAnnotation,
+           let dot = view?.viewWithTag(100) {
+            // Reflect the garage availability with the inner dot's color.
+            dot.backgroundColor = garageAnnotation.isFull ? .systemRed : .systemBlue
         }
         return view
     }
