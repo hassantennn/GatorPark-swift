@@ -43,6 +43,7 @@ class ViewController: UIViewController {
     // Data source: exact coordinates for each garage
     var garages: [Garage] = []
     private var allGarages: [Garage] = []
+    private var hasAnimatedInitialPins = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -311,6 +312,8 @@ extension ViewController: MKMapViewDelegate {
     }
 
     func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
+        guard !hasAnimatedInitialPins else { return }
+        hasAnimatedInitialPins = true
         for (index, view) in views.enumerated() {
             guard !(view.annotation is MKUserLocation) else { continue }
             let dropOffset = mapView.bounds.size.height
