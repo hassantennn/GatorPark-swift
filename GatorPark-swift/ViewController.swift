@@ -318,11 +318,13 @@ extension ViewController: MKMapViewDelegate {
             if garages[index].currentCount < garages[index].capacity {
                 garages[index].currentCount += 1
                 garageAnnotation.garage.currentCount = garages[index].currentCount
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
             }
         } else if control == view.rightCalloutAccessoryView {
             if garages[index].currentCount > 0 {
                 garages[index].currentCount -= 1
                 garageAnnotation.garage.currentCount = garages[index].currentCount
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
             }
         }
 
