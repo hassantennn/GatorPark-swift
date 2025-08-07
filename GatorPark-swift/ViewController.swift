@@ -177,29 +177,47 @@ class ViewController: UIViewController {
     }
 
     private func addZoomButtons() {
-        let zoomInButton = UIButton(frame: CGRect(x: view.bounds.width - 60, y: 100, width: 40, height: 40))
+        let zoomInButton = UIButton(type: .system)
         zoomInButton.setTitle("+", for: .normal)
-        zoomInButton.backgroundColor = .systemBlue
-        zoomInButton.layer.cornerRadius = 8
+        zoomInButton.tintColor = .label
         zoomInButton.addTarget(self, action: #selector(zoomIn), for: .touchUpInside)
-        view.addSubview(zoomInButton)
 
-        let zoomOutButton = UIButton(frame: CGRect(x: view.bounds.width - 60, y: 150, width: 40, height: 40))
+        let zoomOutButton = UIButton(type: .system)
         zoomOutButton.setTitle("-", for: .normal)
-        zoomOutButton.backgroundColor = .systemBlue
-        zoomOutButton.layer.cornerRadius = 8
+        zoomOutButton.tintColor = .label
         zoomOutButton.addTarget(self, action: #selector(zoomOut), for: .touchUpInside)
-        view.addSubview(zoomOutButton)
+
+        let zoomInFrame = CGRect(x: view.bounds.width - 60, y: 100, width: 40, height: 40)
+        let zoomOutFrame = CGRect(x: view.bounds.width - 60, y: 150, width: 40, height: 40)
+
+        view.addSubview(makeBlurContainer(for: zoomInButton, frame: zoomInFrame, cornerRadius: 8))
+        view.addSubview(makeBlurContainer(for: zoomOutButton, frame: zoomOutFrame, cornerRadius: 8))
     }
 
     private func addRecenterButton() {
         recenterButton.setTitle("📍", for: .normal)
-        recenterButton.backgroundColor = .systemGreen
-        recenterButton.layer.cornerRadius = 20
-        recenterButton.tintColor = .white
-        recenterButton.frame = CGRect(x: view.bounds.width - 60, y: 210, width: 40, height: 40)
+        recenterButton.tintColor = .label
         recenterButton.addTarget(self, action: #selector(recenterMap), for: .touchUpInside)
-        view.addSubview(recenterButton)
+
+        let frame = CGRect(x: view.bounds.width - 60, y: 210, width: 40, height: 40)
+        view.addSubview(makeBlurContainer(for: recenterButton, frame: frame, cornerRadius: 20))
+    }
+
+    private func makeBlurContainer(for button: UIButton, frame: CGRect, cornerRadius: CGFloat) -> UIView {
+        if #available(iOS 13.0, *) {
+            let blur = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
+            blur.frame = frame
+            blur.layer.cornerRadius = cornerRadius
+            blur.clipsToBounds = true
+            button.frame = blur.bounds
+            blur.contentView.addSubview(button)
+            return blur
+        } else {
+            button.frame = frame
+            button.backgroundColor = UIColor.white.withAlphaComponent(0.7)
+            button.layer.cornerRadius = cornerRadius
+            return button
+        }
     }
 
     @objc private func recenterMap() {
