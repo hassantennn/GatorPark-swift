@@ -199,8 +199,16 @@ class ViewController: UIViewController {
         recenterButton.tintColor = .label
         recenterButton.addTarget(self, action: #selector(recenterMap), for: .touchUpInside)
 
-        let frame = CGRect(x: view.bounds.width - 60, y: 210, width: 40, height: 40)
-        view.addSubview(makeBlurContainer(for: recenterButton, frame: frame, cornerRadius: 20))
+        let frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        let container = makeBlurContainer(for: recenterButton, frame: frame, cornerRadius: 20)
+        container.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(container)
+        NSLayoutConstraint.activate([
+            container.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            container.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 210),
+            container.widthAnchor.constraint(equalToConstant: 40),
+            container.heightAnchor.constraint(equalToConstant: 40)
+        ])
     }
 
     private func makeBlurContainer(for button: UIButton, frame: CGRect, cornerRadius: CGFloat) -> UIView {
