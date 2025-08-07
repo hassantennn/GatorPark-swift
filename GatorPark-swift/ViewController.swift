@@ -179,12 +179,12 @@ class ViewController: UIViewController {
     private func addZoomButtons() {
         let zoomInButton = UIButton(type: .system)
         zoomInButton.setTitle("+", for: .normal)
-        zoomInButton.tintColor = .label
+        zoomInButton.tintColor = .secondaryLabel
         zoomInButton.addTarget(self, action: #selector(zoomIn), for: .touchUpInside)
 
         let zoomOutButton = UIButton(type: .system)
         zoomOutButton.setTitle("-", for: .normal)
-        zoomOutButton.tintColor = .label
+        zoomOutButton.tintColor = .secondaryLabel
         zoomOutButton.addTarget(self, action: #selector(zoomOut), for: .touchUpInside)
 
         let zoomInFrame = CGRect(x: view.bounds.width - 60, y: 100, width: 40, height: 40)
@@ -254,16 +254,16 @@ extension ViewController: MKMapViewDelegate {
 
             let checkIn = UIButton(type: .system)
             checkIn.setTitle("In", for: .normal)
-            checkIn.setTitleColor(.white, for: .normal)
-            checkIn.backgroundColor = .systemGreen
+            checkIn.tintColor = .systemGreen
+            checkIn.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.2)
             checkIn.frame = CGRect(x: 0, y: 0, width: 44, height: 30)
             checkIn.layer.cornerRadius = 5
             view?.leftCalloutAccessoryView = checkIn
 
             let checkOut = UIButton(type: .system)
             checkOut.setTitle("Out", for: .normal)
-            checkOut.setTitleColor(.white, for: .normal)
-            checkOut.backgroundColor = .systemOrange
+            checkOut.tintColor = .systemOrange
+            checkOut.backgroundColor = UIColor.systemOrange.withAlphaComponent(0.2)
             checkOut.frame = CGRect(x: 0, y: 0, width: 44, height: 30)
             checkOut.layer.cornerRadius = 5
             view?.rightCalloutAccessoryView = checkOut
@@ -272,7 +272,8 @@ extension ViewController: MKMapViewDelegate {
         }
         if let garageAnnotation = annotation as? GarageAnnotation {
             // Reflect the garage availability with annotation color.
-            view?.backgroundColor = garageAnnotation.isFull ? .systemRed : .systemBlue
+            let color = garageAnnotation.isFull ? UIColor.systemRed : UIColor.systemBlue
+            view?.backgroundColor = color.withAlphaComponent(0.8)
         }
         return view
     }
@@ -294,7 +295,8 @@ extension ViewController: MKMapViewDelegate {
         }
 
         if let annView = mapView.view(for: garageAnnotation) {
-            annView.backgroundColor = garageAnnotation.isFull ? .systemRed : .systemBlue
+            let color = garageAnnotation.isFull ? UIColor.systemRed : UIColor.systemBlue
+            annView.backgroundColor = color.withAlphaComponent(0.8)
             annView.annotation = garageAnnotation
             mapView.selectAnnotation(garageAnnotation, animated: false)
         }
