@@ -7,6 +7,18 @@ class ViewController: UIViewController {
     let recenterButton = UIButton(type: .system)
     let searchBar = UISearchBar()
     let suggestionsTableView = UITableView()
+    let suggestionsBlurView: UIVisualEffectView = {
+        let effect: UIBlurEffect
+        if #available(iOS 13.0, *) {
+            effect = UIBlurEffect(style: .systemMaterial)
+        } else {
+            effect = UIBlurEffect(style: .light)
+        }
+        let view = UIVisualEffectView(effect: effect)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }()
     private var filteredGarages: [Garage] = []
 
     struct Garage {
@@ -115,21 +127,33 @@ class ViewController: UIViewController {
     private let suggestionCellID = "SuggestionCell"
 
     private func setupSuggestionsTableView() {
-        suggestionsTableView.isHidden = true
         suggestionsTableView.delegate = self
         suggestionsTableView.dataSource = self
-        suggestionsTableView.backgroundColor = .systemBackground
+        suggestionsTableView.backgroundColor = .clear
         suggestionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: suggestionCellID)
         suggestionsTableView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(suggestionsTableView)
-        view.bringSubviewToFront(suggestionsTableView)
+
+        view.addSubview(suggestionsBlurView)
+        suggestionsBlurView.contentView.addSubview(suggestionsTableView)
+        view.bringSubviewToFront(suggestionsBlurView)
+        setSuggestionsHidden(true)
 
         NSLayoutConstraint.activate([
-            suggestionsTableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
-            suggestionsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            suggestionsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            suggestionsTableView.heightAnchor.constraint(equalToConstant: 200)
+            suggestionsBlurView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            suggestionsBlurView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            suggestionsBlurView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            suggestionsBlurView.heightAnchor.constraint(equalToConstant: 200),
+
+            suggestionsTableView.topAnchor.constraint(equalTo: suggestionsBlurView.contentView.topAnchor),
+            suggestionsTableView.leadingAnchor.constraint(equalTo: suggestionsBlurView.contentView.leadingAnchor),
+            suggestionsTableView.trailingAnchor.constraint(equalTo: suggestionsBlurView.contentView.trailingAnchor),
+            suggestionsTableView.bottomAnchor.constraint(equalTo: suggestionsBlurView.contentView.bottomAnchor)
         ])
+    }
+
+    private func setSuggestionsHidden(_ hidden: Bool) {
+        suggestionsTableView.isHidden = hidden
+        suggestionsBlurView.isHidden = hidden
     }
 
     private func setupGarages() {
@@ -333,7 +357,7 @@ extension ViewController: UISearchBarDelegate {
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        suggestionsTableView.isHidden = true
+        setSuggestionsHidden(true)
         guard let text = searchBar.text, !text.isEmpty else { return }
         performSearch(text: text)
     }
@@ -341,16 +365,16 @@ extension ViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
             filteredGarages.removeAll()
-            suggestionsTableView.isHidden = true
+            setSuggestionsHidden(true)
             garages = allGarages
             addGaragePins()
         } else if Int(searchText) == nil {
             filteredGarages = allGarages.filter { $0.name.lowercased().contains(searchText.lowercased()) }
-            suggestionsTableView.isHidden = filteredGarages.isEmpty
+            setSuggestionsHidden(filteredGarages.isEmpty)
             suggestionsTableView.reloadData()
         } else {
             filteredGarages.removeAll()
-            suggestionsTableView.isHidden = true
+            setSuggestionsHidden(true)
         }
     }
 
@@ -358,7 +382,7 @@ extension ViewController: UISearchBarDelegate {
         searchBar.text = nil
         searchBar.resignFirstResponder()
         filteredGarages.removeAll()
-        suggestionsTableView.isHidden = true
+        setSuggestionsHidden(true)
         garages = allGarages
         addGaragePins()
     }
@@ -371,7 +395,8 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: suggestionCellID, for: indexPath)
-
+        cell.backgroundColor = .clear
+        cell.contentView.backgroundColor = .clear
         cell.textLabel?.text = filteredGarages[indexPath.row].name
         return cell
     }
@@ -379,7 +404,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let garage = filteredGarages[indexPath.row]
         searchBar.text = garage.name
-        suggestionsTableView.isHidden = true
+        setSuggestionsHidden(true)
         searchBar.resignFirstResponder()
         performSearch(text: garage.name)
     }
