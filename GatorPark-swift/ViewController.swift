@@ -32,6 +32,7 @@ class ViewController: UIViewController {
         var garage: Garage
         var coordinate: CLLocationCoordinate2D { garage.coordinate }
         var title: String? { garage.name }
+        var subtitle: String? { "Spaces: \(garage.currentCount)/\(garage.capacity)" }
         var isFull: Bool { garage.currentCount >= garage.capacity }
 
         init(garage: Garage) {
@@ -280,27 +281,23 @@ extension ViewController: MKMapViewDelegate {
         if view == nil {
             view = MKAnnotationView(annotation: annotation, reuseIdentifier: id)
             view?.canShowCallout = true
-            view?.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-            view?.layer.cornerRadius = 22
+            view?.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+            view?.layer.cornerRadius = 10
 
             let checkIn = UIButton(type: .system)
             checkIn.setTitle("In", for: .normal)
             checkIn.tintColor = .systemGreen
             checkIn.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.2)
-            checkIn.frame = CGRect(x: 0, y: 0, width: 60, height: 44)
+            checkIn.frame = CGRect(x: 0, y: 0, width: 44, height: 30)
             checkIn.layer.cornerRadius = 5
-            checkIn.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
-            checkIn.titleLabel?.adjustsFontForContentSizeCategory = true
             view?.leftCalloutAccessoryView = checkIn
 
             let checkOut = UIButton(type: .system)
             checkOut.setTitle("Out", for: .normal)
             checkOut.tintColor = .systemOrange
             checkOut.backgroundColor = UIColor.systemOrange.withAlphaComponent(0.2)
-            checkOut.frame = CGRect(x: 0, y: 0, width: 60, height: 44)
+            checkOut.frame = CGRect(x: 0, y: 0, width: 44, height: 30)
             checkOut.layer.cornerRadius = 5
-            checkOut.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
-            checkOut.titleLabel?.adjustsFontForContentSizeCategory = true
             view?.rightCalloutAccessoryView = checkOut
         } else {
             view?.annotation = annotation
@@ -309,18 +306,6 @@ extension ViewController: MKMapViewDelegate {
             // Reflect the garage availability with annotation color.
             let color = garageAnnotation.isFull ? UIColor.systemRed : UIColor.systemBlue
             view?.backgroundColor = color.withAlphaComponent(0.8)
-
-            let detailLabel: UILabel
-            if let existing = view?.detailCalloutAccessoryView as? UILabel {
-                detailLabel = existing
-            } else {
-                detailLabel = UILabel()
-                detailLabel.numberOfLines = 0
-                detailLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
-                detailLabel.adjustsFontForContentSizeCategory = true
-                view?.detailCalloutAccessoryView = detailLabel
-            }
-            detailLabel.text = "Spaces: \(garageAnnotation.garage.currentCount)/\(garageAnnotation.garage.capacity)"
         }
         return view
     }
@@ -365,9 +350,6 @@ extension ViewController: MKMapViewDelegate {
             let color = garageAnnotation.isFull ? UIColor.systemRed : UIColor.systemBlue
             annView.backgroundColor = color.withAlphaComponent(0.8)
             annView.annotation = garageAnnotation
-            if let label = annView.detailCalloutAccessoryView as? UILabel {
-                label.text = "Spaces: \(garageAnnotation.garage.currentCount)/\(garageAnnotation.garage.capacity)"
-            }
             mapView.selectAnnotation(garageAnnotation, animated: false)
         }
     }
