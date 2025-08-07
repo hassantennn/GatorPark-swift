@@ -310,6 +310,24 @@ extension ViewController: MKMapViewDelegate {
         return view
     }
 
+    func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
+        for (index, view) in views.enumerated() {
+            guard !(view.annotation is MKUserLocation) else { continue }
+            let dropOffset = mapView.bounds.size.height
+            view.transform = CGAffineTransform(translationX: 0, y: -dropOffset)
+            UIView.animate(
+                withDuration: 0.6,
+                delay: 0.05 * Double(index),
+                usingSpringWithDamping: 0.6,
+                initialSpringVelocity: 0.8,
+                options: [.curveEaseInOut],
+                animations: {
+                    view.transform = .identity
+                }
+            )
+        }
+    }
+
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         guard let garageAnnotation = view.annotation as? GarageAnnotation,
               let index = garages.firstIndex(where: { $0.name == garageAnnotation.garage.name }) else { return }
