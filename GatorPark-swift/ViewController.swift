@@ -262,8 +262,21 @@ extension ViewController: MKMapViewDelegate {
            let dot = view?.viewWithTag(100) {
             // Reflect the garage availability with the inner dot's color.
             dot.backgroundColor = garageAnnotation.isFull ? .systemRed : .systemBlue
+            configureCallout(for: view, with: garageAnnotation)
         }
         return view
+    }
+
+    private func configureCallout(for view: MKAnnotationView?, with annotation: GarageAnnotation) {
+        guard let view = view else { return }
+        if #available(iOS 14.0, *) {
+            var content = UIListContentConfiguration.subtitleCell()
+            content.text = annotation.garage.name
+            content.secondaryText = "Spaces: \(annotation.garage.currentCount)/\(annotation.garage.capacity)"
+            view.detailCalloutAccessoryView = UIListContentView(configuration: content)
+        } else {
+            view.detailCalloutAccessoryView = nil
+        }
     }
 
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
@@ -284,7 +297,11 @@ extension ViewController: MKMapViewDelegate {
 
         if let annView = mapView.view(for: garageAnnotation) {
             annView.backgroundColor = garageAnnotation.isFull ? .systemRed : .systemBlue
+            if let dot = annView.viewWithTag(100) {
+                dot.backgroundColor = garageAnnotation.isFull ? .systemRed : .systemBlue
+            }
             annView.annotation = garageAnnotation
+            configureCallout(for: annView, with: garageAnnotation)
             mapView.selectAnnotation(garageAnnotation, animated: false)
         }
     }
