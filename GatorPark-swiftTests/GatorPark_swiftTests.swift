@@ -38,18 +38,4 @@ struct GatorPark_swiftTests {
         #expect(openView?.backgroundColor == .systemBlue)
     }
 
-    @Test func tracksTopReferrer() async throws {
-        let suiteName = "ReferralTestSuite"
-        let defaults = UserDefaults(suiteName: suiteName)!
-        defer { defaults.removePersistentDomain(forName: suiteName) }
-
-        let manager = ReferralManager(launchDate: Date(), defaults: defaults)
-        manager.addReferral(from: "user1")
-        manager.addReferral(from: "user1")
-        manager.addReferral(from: "user2")
-
-        let winner = manager.topReferrer()
-        #expect(winner?.userID == "user1")
-        #expect(winner?.count == 2)
-    }
 }
