@@ -428,12 +428,12 @@ extension ViewController: MKMapViewDelegate {
                 }
             }
 
-            if let annView = self.mapView.view(for: garageAnnotation) {
+            if let annView = self.mapView.view(for: garageAnnotation) as? MKMarkerAnnotationView {
                 let color = garageAnnotation.isFull ? UIColor.systemRed : UIColor.systemBlue
                 annView.markerTintColor = color
                 annView.annotation = garageAnnotation
                 self.mapView.selectAnnotation(garageAnnotation, animated: false)
-                
+
                 if let stack = annView.detailCalloutAccessoryView as? UIStackView,
                    let statusLabel = stack.arrangedSubviews.first as? UILabel,
                    let progress = stack.arrangedSubviews.last as? UIProgressView {
