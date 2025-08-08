@@ -1,5 +1,6 @@
 import UIKit
 import MapKit
+import UserNotifications
 
 class ViewController: UIViewController {
 
@@ -59,6 +60,7 @@ class ViewController: UIViewController {
     var garages: [Garage] = []
     private var allGarages: [Garage] = []
     private var hasAnimatedInitialPins = false
+    private let checkoutReminderID = "checkoutReminder"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -287,6 +289,22 @@ class ViewController: UIViewController {
         r.span.longitudeDelta *= 2
         mapView.setRegion(r, animated: true)
     }
+
+    private func scheduleCheckoutReminder() {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [checkoutReminderID])
+        let content = UNMutableNotificationContent()
+        content.title = "Checkout Reminder"
+        content.body = "Don't forget to check out of your spot."
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 20, repeats: false)
+        let request = UNNotificationRequest(identifier: checkoutReminderID, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+
+    private func cancelCheckoutReminder() {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: [checkoutReminderID])
+        center.removeDeliveredNotifications(withIdentifiers: [checkoutReminderID])
+    }
 }
 
 extension ViewController: MKMapViewDelegate {
@@ -355,12 +373,14 @@ extension ViewController: MKMapViewDelegate {
                 garages[index].currentCount += 1
                 garageAnnotation.garage.currentCount = garages[index].currentCount
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                scheduleCheckoutReminder()
             }
         } else if control == view.rightCalloutAccessoryView {
             if garages[index].currentCount > 0 {
                 garages[index].currentCount -= 1
                 garageAnnotation.garage.currentCount = garages[index].currentCount
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                cancelCheckoutReminder()
             }
         }
 
