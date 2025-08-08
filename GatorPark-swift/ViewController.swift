@@ -159,7 +159,7 @@ class ViewController: UIViewController {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         mapView.showsUserLocation = true
-        mapView.setUserTrackingMode(.follow, animated: false)
+        mapView.setUserTrackingMode(.followWithHeading, animated: false)
         let region = MKCoordinateRegion(center: defaultCoordinate,
                                         span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         mapView.setRegion(region, animated: false)
@@ -367,9 +367,14 @@ extension ViewController: MKMapViewDelegate {
             if view == nil {
                 view = MKAnnotationView(annotation: annotation, reuseIdentifier: id)
                 view?.canShowCallout = false
-                view?.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-                view?.layer.cornerRadius = 10
-                view?.backgroundColor = UIColor.systemBlue
+                if #available(iOS 13.0, *) {
+                    view?.image = UIImage(systemName: "location.fill")
+                    view?.tintColor = .systemBlue
+                } else {
+                    view?.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+                    view?.layer.cornerRadius = 10
+                    view?.backgroundColor = UIColor.systemBlue
+                }
             } else {
                 view?.annotation = annotation
             }
