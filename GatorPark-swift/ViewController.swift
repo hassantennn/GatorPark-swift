@@ -93,6 +93,7 @@ class ViewController: UIViewController {
         addGaragePins()  // drop pins
         addZoomButtons()
         addRecenterButton()
+        addCompassButton()
     }
 
     private func setupMap() {
@@ -139,6 +140,18 @@ class ViewController: UIViewController {
         )
 
         mapView.delegate = self
+    }
+
+    private func addCompassButton() {
+        mapView.showsCompass = false
+        let compass = MKCompassButton(mapView: mapView)
+        compass.compassVisibility = .visible
+        compass.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(compass)
+        NSLayoutConstraint.activate([
+            compass.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 16),
+            compass.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20)
+        ])
     }
 
     private func setupLocation() {
