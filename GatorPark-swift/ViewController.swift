@@ -5,7 +5,6 @@ import UserNotifications
 class ViewController: UIViewController {
 
     let mapView = MKMapView()
-    let recenterButton = UIButton(type: .system)
     let searchBar = UISearchBar()
     let suggestionsTableView = UITableView()
     let suggestionsBlurView: UIVisualEffectView = {
@@ -87,7 +86,6 @@ class ViewController: UIViewController {
         setupGarages()  // load coordinate data
         addGaragePins()  // drop pins
         addZoomButtons()
-        addRecenterButton()
     }
 
     private func setupMap() {
@@ -238,59 +236,37 @@ class ViewController: UIViewController {
     private func addZoomButtons() {
         let zoomInButton = UIButton(type: .system)
         zoomInButton.setTitle("+", for: .normal)
-        zoomInButton.tintColor = .secondaryLabel
+        zoomInButton.tintColor = .white
         zoomInButton.addTarget(self, action: #selector(zoomIn), for: .touchUpInside)
 
         let zoomOutButton = UIButton(type: .system)
         zoomOutButton.setTitle("-", for: .normal)
-        zoomOutButton.tintColor = .secondaryLabel
+        zoomOutButton.tintColor = .white
         zoomOutButton.addTarget(self, action: #selector(zoomOut), for: .touchUpInside)
 
-        let zoomInFrame = CGRect(x: view.bounds.width - 60, y: 100, width: 40, height: 40)
-        let zoomOutFrame = CGRect(x: view.bounds.width - 60, y: 150, width: 40, height: 40)
+        let zoomInFrame = CGRect(x: view.bounds.width - 60, y: 120, width: 40, height: 40)
+        let zoomOutFrame = CGRect(x: view.bounds.width - 60, y: 170, width: 40, height: 40)
 
         view.addSubview(makeBlurContainer(for: zoomInButton, frame: zoomInFrame, cornerRadius: 8))
         view.addSubview(makeBlurContainer(for: zoomOutButton, frame: zoomOutFrame, cornerRadius: 8))
     }
 
-    private func addRecenterButton() {
-        recenterButton.setTitle("📍", for: .normal)
-        recenterButton.tintColor = .label
-        recenterButton.addTarget(self, action: #selector(recenterMap), for: .touchUpInside)
-
-        let frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        let container = makeBlurContainer(for: recenterButton, frame: frame, cornerRadius: 20)
-        container.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(container)
-        NSLayoutConstraint.activate([
-            container.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            container.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 210),
-            container.widthAnchor.constraint(equalToConstant: 40),
-            container.heightAnchor.constraint(equalToConstant: 40)
-        ])
-    }
-
     private func makeBlurContainer(for button: UIButton, frame: CGRect, cornerRadius: CGFloat) -> UIView {
         if #available(iOS 13.0, *) {
-            let blur = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
+            let blur = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterialDark))
             blur.frame = frame
             blur.layer.cornerRadius = cornerRadius
             blur.clipsToBounds = true
+            blur.overrideUserInterfaceStyle = .dark
             button.frame = blur.bounds
             blur.contentView.addSubview(button)
             return blur
         } else {
             button.frame = frame
-            button.backgroundColor = UIColor.white.withAlphaComponent(0.7)
+            button.backgroundColor = UIColor.black.withAlphaComponent(0.7)
             button.layer.cornerRadius = cornerRadius
             return button
         }
-    }
-
-    @objc private func recenterMap() {
-        guard let loc = mapView.userLocation.location?.coordinate else { return }
-        let region = MKCoordinateRegion(center: loc, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-        mapView.setRegion(region, animated: true)
     }
 
     @objc private func zoomIn() {
