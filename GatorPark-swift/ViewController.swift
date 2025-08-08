@@ -25,7 +25,7 @@ class ViewController: UIViewController {
         let name: String
         let coordinate: CLLocationCoordinate2D
         var currentCount: Int
-        var capacity: Int = 200
+        var capacity: Int = 12
     }
 
     class GarageAnnotation: NSObject, MKAnnotation {
