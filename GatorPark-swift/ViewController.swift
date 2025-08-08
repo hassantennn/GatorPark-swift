@@ -20,6 +20,7 @@ class ViewController: UIViewController {
         return view
     }()
     private var filteredGarages: [Garage] = []
+    private var checkedInGarage: String?
 
     struct Garage {
         let name: String
@@ -300,6 +301,12 @@ class ViewController: UIViewController {
         center.removePendingNotificationRequests(withIdentifiers: [checkoutReminderID])
         center.removeDeliveredNotifications(withIdentifiers: [checkoutReminderID])
     }
+
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
 }
 
 extension ViewController: MKMapViewDelegate {
@@ -380,8 +387,24 @@ extension ViewController: MKMapViewDelegate {
               let index = garages.firstIndex(where: { $0.name == garageAnnotation.garage.name }) else { return }
 
         let isCheckIn = control == view.leftCalloutAccessoryView
-        let actionText = isCheckIn ? "check in" : "check out"
+        if isCheckIn {
+            if let current = checkedInGarage {
+                let message = current == garageAnnotation.garage.name ? "You are already checked in here." : "You are already checked in at \(current). Please check out before checking in to another garage."
+                showAlert(title: "Already Checked In", message: message)
+                return
+            }
+        } else {
+            guard let current = checkedInGarage else {
+                showAlert(title: "Not Checked In", message: "You are not currently checked in to any garage.")
+                return
+            }
+            guard current == garageAnnotation.garage.name else {
+                showAlert(title: "Wrong Garage", message: "You are checked in at \(current).")
+                return
+            }
+        }
 
+        let actionText = isCheckIn ? "check in" : "check out"
         let alert = UIAlertController(title: "Confirm", message: "Are you sure you want to \(actionText)?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] _ in
@@ -390,6 +413,7 @@ extension ViewController: MKMapViewDelegate {
                 if self.garages[index].currentCount < self.garages[index].capacity {
                     self.garages[index].currentCount += 1
                     garageAnnotation.garage.currentCount = self.garages[index].currentCount
+                    self.checkedInGarage = garageAnnotation.garage.name
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     self.scheduleCheckoutReminder(for: garageAnnotation.garage)
                 }
@@ -397,6 +421,7 @@ extension ViewController: MKMapViewDelegate {
                 if self.garages[index].currentCount > 0 {
                     self.garages[index].currentCount -= 1
                     garageAnnotation.garage.currentCount = self.garages[index].currentCount
+                    self.checkedInGarage = nil
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     self.cancelCheckoutReminder()
                 }
