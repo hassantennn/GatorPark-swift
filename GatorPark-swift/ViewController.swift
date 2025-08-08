@@ -1,6 +1,7 @@
 import UIKit
 import MapKit
 import UserNotifications
+import CoreLocation
 
 class ViewController: UIViewController {
 
@@ -21,6 +22,9 @@ class ViewController: UIViewController {
         return view
     }()
     private var filteredGarages: [Garage] = []
+    private let locationManager = CLLocationManager()
+    private let defaultCoordinate = CLLocationCoordinate2D(latitude: 29.6516, longitude: -82.3410)
+    private var simulatedUserAnnotation: MKPointAnnotation?
 
     struct Garage {
         let name: String
@@ -82,6 +86,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMap()
+        setupLocation()
         setupSearchBar()
         setupSuggestionsTableView()
         setupGarages()  // load coordinate data
@@ -134,7 +139,24 @@ class ViewController: UIViewController {
         )
 
         mapView.delegate = self
+    }
+
+    private func setupLocation() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
         mapView.showsUserLocation = true
+        mapView.setUserTrackingMode(.follow, animated: false)
+        let region = MKCoordinateRegion(center: defaultCoordinate,
+                                        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+        mapView.setRegion(region, animated: false)
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = defaultCoordinate
+        simulatedUserAnnotation = annotation
+        mapView.addAnnotation(annotation)
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.startUpdatingLocation()
+        }
     }
 
     private func setupSearchBar() {
@@ -326,6 +348,20 @@ class ViewController: UIViewController {
 
 extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let simulated = simulatedUserAnnotation, annotation === simulated {
+            let id = "User"
+            var view = mapView.dequeueReusableAnnotationView(withIdentifier: id)
+            if view == nil {
+                view = MKAnnotationView(annotation: annotation, reuseIdentifier: id)
+                view?.canShowCallout = false
+                view?.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+                view?.layer.cornerRadius = 10
+                view?.backgroundColor = UIColor.systemBlue
+            } else {
+                view?.annotation = annotation
+            }
+            return view
+        }
         guard !(annotation is MKUserLocation) else { return nil }
         let id = "Garage"
         var view = mapView.dequeueReusableAnnotationView(withIdentifier: id)
@@ -439,6 +475,25 @@ extension ViewController: MKMapViewDelegate {
             }
         })
         present(alert, animated: true)
+    }
+}
+
+extension ViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedWhenInUse || status == .authorizedAlways {
+            manager.startUpdatingLocation()
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        if let simulated = simulatedUserAnnotation {
+            mapView.removeAnnotation(simulated)
+            simulatedUserAnnotation = nil
+        }
+        let region = MKCoordinateRegion(center: location.coordinate,
+                                        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+        mapView.setRegion(region, animated: true)
     }
 }
 

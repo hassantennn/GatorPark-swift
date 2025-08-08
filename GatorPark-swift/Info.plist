@@ -20,6 +20,8 @@
 				</dict>
 			</array>
 		</dict>
-	</dict>
+        </dict>
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>Your location is used to display your position on the campus map.</string>
 </dict>
 </plist>
