@@ -290,7 +290,7 @@ class ViewController: UIViewController {
         let content = UNMutableNotificationContent()
         content.title = "Checkout Reminder"
         content.body = "Don't forget to check out of \(garage.name)."
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2.5 * 60 * 60, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 20, repeats: false)
         let request = UNNotificationRequest(identifier: checkoutReminderID, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
