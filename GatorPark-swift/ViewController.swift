@@ -211,7 +211,7 @@ class ViewController: UIViewController {
             Garage(name: "Maguire Parking", coordinate: CLLocationCoordinate2D(latitude: 29.640755, longitude: -82.368668), currentCount: 0),
             Garage(name: "Southwest Tennis", coordinate: CLLocationCoordinate2D(latitude: 29.638010, longitude: -82.367084), currentCount: 0),
             Garage(name: "Southwest Lot 4", coordinate: CLLocationCoordinate2D(latitude: 29.637503, longitude: -82.367424), currentCount: 0),
-            Garage(name: "Garage 7", coordinate: CLLocationCoordinate2D(latitude: 29.650583, longitude: -82.350972), currentCount: 0), // DMS converted
+            Garage(name: "Garage 7", coordinate: CLLocationCoordinate2D(latitude: 29.650583, longitude: -82.350972), currentCount: 12), // DMS converted
             Garage(name: "Stadium 1", coordinate: CLLocationCoordinate2D(latitude: 29.651728, longitude: -82.349180), currentCount: 0),
             Garage(name: "Stadium 2", coordinate: CLLocationCoordinate2D(latitude: 29.649024, longitude: -82.347825), currentCount: 0),
             Garage(name: "Stadium 3", coordinate: CLLocationCoordinate2D(latitude: 29.649791, longitude: -82.350006), currentCount: 0),
@@ -340,7 +340,7 @@ extension ViewController: MKMapViewDelegate {
             // Reflect the garage availability with annotation color.
             let color = garageAnnotation.isFull ? UIColor.systemRed : UIColor.systemBlue
             view?.markerTintColor = color
-            view?.glyphImage = UIImage(systemName: "car.fill")
+            view?.glyphText = "P"
             view?.glyphTintColor = .white
 
             // Status indicator within callout
