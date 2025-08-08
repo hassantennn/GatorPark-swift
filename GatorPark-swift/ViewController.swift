@@ -306,12 +306,10 @@ extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard !(annotation is MKUserLocation) else { return nil }
         let id = "Garage"
-        var view = mapView.dequeueReusableAnnotationView(withIdentifier: id)
+        var view = mapView.dequeueReusableAnnotationView(withIdentifier: id) as? MKMarkerAnnotationView
         if view == nil {
-            view = MKAnnotationView(annotation: annotation, reuseIdentifier: id)
+            view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: id)
             view?.canShowCallout = true
-            view?.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-            view?.layer.cornerRadius = 15
 
             let checkIn = UIButton(type: .system)
             checkIn.setTitle("In", for: .normal)
@@ -334,7 +332,9 @@ extension ViewController: MKMapViewDelegate {
         if let garageAnnotation = annotation as? GarageAnnotation {
             // Reflect the garage availability with annotation color.
             let color = garageAnnotation.isFull ? UIColor.systemRed : UIColor.systemBlue
-            view?.backgroundColor = color.withAlphaComponent(0.8)
+            view?.markerTintColor = color
+            view?.glyphImage = UIImage(systemName: "car.fill")
+            view?.glyphTintColor = .white
 
             // Status indicator within callout
             let statusLabel = UILabel()
