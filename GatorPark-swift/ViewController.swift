@@ -237,11 +237,13 @@ class ViewController: UIViewController {
         let zoomInButton = UIButton(type: .system)
         zoomInButton.setTitle("+", for: .normal)
         zoomInButton.tintColor = .white
+        zoomInButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0.5, alpha: 1.0)
         zoomInButton.addTarget(self, action: #selector(zoomIn), for: .touchUpInside)
 
         let zoomOutButton = UIButton(type: .system)
         zoomOutButton.setTitle("-", for: .normal)
         zoomOutButton.tintColor = .white
+        zoomOutButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0.5, alpha: 1.0)
         zoomOutButton.addTarget(self, action: #selector(zoomOut), for: .touchUpInside)
 
         let zoomInFrame = CGRect(x: view.bounds.width - 60, y: 120, width: 40, height: 40)
@@ -263,7 +265,7 @@ class ViewController: UIViewController {
             return blur
         } else {
             button.frame = frame
-            button.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+            button.backgroundColor = UIColor(red: 0, green: 0, blue: 0.5, alpha: 1.0)
             button.layer.cornerRadius = cornerRadius
             return button
         }
