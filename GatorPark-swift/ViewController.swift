@@ -32,7 +32,22 @@ class ViewController: UIViewController {
         var garage: Garage
         var coordinate: CLLocationCoordinate2D { garage.coordinate }
         var title: String? { garage.name }
-        var subtitle: String? { "Spaces: \(garage.currentCount)/\(garage.capacity)" }
+        var subtitle: String? {
+            let occupied = garage.currentCount
+            let capacity = garage.capacity
+            let availability: String
+            switch occupied {
+            case 0..<4:
+                availability = "high availability"
+            case 4..<8:
+                availability = "moderate availability"
+            case 8...capacity:
+                availability = "low availability"
+            default:
+                availability = "low availability"
+            }
+            return "Spaces: \(occupied)/\(capacity) - \(availability)"
+        }
         var isFull: Bool { garage.currentCount >= garage.capacity }
 
         init(garage: Garage) {
