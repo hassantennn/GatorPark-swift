@@ -307,11 +307,11 @@ class ViewController: UIViewController {
         mapView.setRegion(r, animated: true)
     }
 
-    private func scheduleCheckoutReminder() {
+    private func scheduleCheckoutReminder(for garage: Garage) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [checkoutReminderID])
         let content = UNMutableNotificationContent()
         content.title = "Checkout Reminder"
-        content.body = "Don't forget to check out of your spot."
+        content.body = "Don't forget to check out of \(garage.name)."
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 20, repeats: false)
         let request = UNNotificationRequest(identifier: checkoutReminderID, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
@@ -413,7 +413,7 @@ extension ViewController: MKMapViewDelegate {
                     self.garages[index].currentCount += 1
                     garageAnnotation.garage.currentCount = self.garages[index].currentCount
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                    self.scheduleCheckoutReminder()
+                    self.scheduleCheckoutReminder(for: garageAnnotation.garage)
                 }
             } else {
                 if self.garages[index].currentCount > 0 {
