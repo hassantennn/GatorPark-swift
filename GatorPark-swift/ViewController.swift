@@ -49,6 +49,23 @@ class ViewController: UIViewController {
             }
             return "Spaces: \(occupied)/\(capacity) - \(availability)"
         }
+        /// Fraction of occupied spaces 0.0...1.0
+        var occupancy: Float {
+            guard garage.capacity > 0 else { return 0 }
+            return Float(garage.currentCount) / Float(garage.capacity)
+        }
+
+        /// Textual status for the current occupancy level.
+        var statusText: String {
+            switch occupancy {
+            case 0..<0.33:
+                return "Empty"
+            case 0..<0.66:
+                return "Moderate"
+            default:
+                return "Busy"
+            }
+        }
         var isFull: Bool { garage.currentCount >= garage.capacity }
 
         init(garage: Garage) {
@@ -315,14 +332,14 @@ extension ViewController: MKMapViewDelegate {
         if view == nil {
             view = MKAnnotationView(annotation: annotation, reuseIdentifier: id)
             view?.canShowCallout = true
-            view?.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-            view?.layer.cornerRadius = 10
+            view?.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+            view?.layer.cornerRadius = 15
 
             let checkIn = UIButton(type: .system)
             checkIn.setTitle("In", for: .normal)
             checkIn.tintColor = .systemGreen
             checkIn.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.2)
-            checkIn.frame = CGRect(x: 0, y: 0, width: 44, height: 30)
+            checkIn.frame = CGRect(x: 0, y: 0, width: 60, height: 34)
             checkIn.layer.cornerRadius = 5
             view?.leftCalloutAccessoryView = checkIn
 
@@ -330,7 +347,7 @@ extension ViewController: MKMapViewDelegate {
             checkOut.setTitle("Out", for: .normal)
             checkOut.tintColor = .systemOrange
             checkOut.backgroundColor = UIColor.systemOrange.withAlphaComponent(0.2)
-            checkOut.frame = CGRect(x: 0, y: 0, width: 44, height: 30)
+            checkOut.frame = CGRect(x: 0, y: 0, width: 60, height: 34)
             checkOut.layer.cornerRadius = 5
             view?.rightCalloutAccessoryView = checkOut
         } else {
@@ -340,6 +357,22 @@ extension ViewController: MKMapViewDelegate {
             // Reflect the garage availability with annotation color.
             let color = garageAnnotation.isFull ? UIColor.systemRed : UIColor.systemBlue
             view?.backgroundColor = color.withAlphaComponent(0.8)
+
+            // Status indicator within callout
+            let statusLabel = UILabel()
+            statusLabel.font = UIFont.systemFont(ofSize: 12)
+            statusLabel.text = garageAnnotation.statusText
+
+            let progress = UIProgressView(progressViewStyle: .default)
+            progress.progress = garageAnnotation.occupancy
+
+            let stack = UIStackView(arrangedSubviews: [statusLabel, progress])
+            stack.axis = .vertical
+            stack.spacing = 4
+            stack.translatesAutoresizingMaskIntoConstraints = false
+            stack.widthAnchor.constraint(equalToConstant: 120).isActive = true
+
+            view?.detailCalloutAccessoryView = stack
         }
         return view
     }
@@ -368,28 +401,44 @@ extension ViewController: MKMapViewDelegate {
         guard let garageAnnotation = view.annotation as? GarageAnnotation,
               let index = garages.firstIndex(where: { $0.name == garageAnnotation.garage.name }) else { return }
 
-        if control == view.leftCalloutAccessoryView {
-            if garages[index].currentCount < garages[index].capacity {
-                garages[index].currentCount += 1
-                garageAnnotation.garage.currentCount = garages[index].currentCount
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                scheduleCheckoutReminder()
-            }
-        } else if control == view.rightCalloutAccessoryView {
-            if garages[index].currentCount > 0 {
-                garages[index].currentCount -= 1
-                garageAnnotation.garage.currentCount = garages[index].currentCount
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                cancelCheckoutReminder()
-            }
-        }
+        let isCheckIn = control == view.leftCalloutAccessoryView
+        let actionText = isCheckIn ? "check in" : "check out"
 
-        if let annView = mapView.view(for: garageAnnotation) {
-            let color = garageAnnotation.isFull ? UIColor.systemRed : UIColor.systemBlue
-            annView.backgroundColor = color.withAlphaComponent(0.8)
-            annView.annotation = garageAnnotation
-            mapView.selectAnnotation(garageAnnotation, animated: false)
-        }
+        let alert = UIAlertController(title: "Confirm", message: "Are you sure you want to \(actionText)?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            if isCheckIn {
+                if self.garages[index].currentCount < self.garages[index].capacity {
+                    self.garages[index].currentCount += 1
+                    garageAnnotation.garage.currentCount = self.garages[index].currentCount
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    self.scheduleCheckoutReminder()
+                }
+            } else {
+                if self.garages[index].currentCount > 0 {
+                    self.garages[index].currentCount -= 1
+                    garageAnnotation.garage.currentCount = self.garages[index].currentCount
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    self.cancelCheckoutReminder()
+                }
+            }
+
+            if let annView = self.mapView.view(for: garageAnnotation) {
+                let color = garageAnnotation.isFull ? UIColor.systemRed : UIColor.systemBlue
+                annView.backgroundColor = color.withAlphaComponent(0.8)
+                annView.annotation = garageAnnotation
+                self.mapView.selectAnnotation(garageAnnotation, animated: false)
+
+                if let stack = annView.detailCalloutAccessoryView as? UIStackView,
+                   let statusLabel = stack.arrangedSubviews.first as? UILabel,
+                   let progress = stack.arrangedSubviews.last as? UIProgressView {
+                    statusLabel.text = garageAnnotation.statusText
+                    progress.progress = garageAnnotation.occupancy
+                }
+            }
+        })
+        present(alert, animated: true)
     }
 }
 
