@@ -4,6 +4,7 @@ import UserNotifications
 
 class ViewController: UIViewController {
 
+    let service = GarageService.shared
     let mapView = MKMapView()
     let searchBar = UISearchBar()
     let suggestionsTableView = UITableView()
@@ -21,13 +22,6 @@ class ViewController: UIViewController {
     }()
     private var filteredGarages: [Garage] = []
     private var checkedInGarage: String?
-
-    struct Garage {
-        let name: String
-        let coordinate: CLLocationCoordinate2D
-        var currentCount: Int
-        var capacity: Int = 12
-    }
 
     class GarageAnnotation: NSObject, MKAnnotation {
         var garage: Garage
@@ -84,8 +78,14 @@ class ViewController: UIViewController {
         setupMap()
         setupSearchBar()
         setupSuggestionsTableView()
-        setupGarages()  // load coordinate data
-        addGaragePins()  // drop pins
+        service.fetchGarages { [weak self] garages in
+            self?.garages = garages
+            self?.allGarages = garages
+            self?.addGaragePins()
+        }
+        service.listenForUpdates { [weak self] garage in
+            self?.updateGarage(garage)
+        }
         addZoomButtons()
     }
 
@@ -190,36 +190,6 @@ class ViewController: UIViewController {
         suggestionsBlurView.isHidden = hidden
     }
 
-    private func setupGarages() {
-        // Exact lat/lng from user
-        garages = [
-            Garage(name: "Rawlings", coordinate: CLLocationCoordinate2D(latitude: 29.645255, longitude: -82.342954), currentCount: 0),
-            Garage(name: "Reitz Garage", coordinate: CLLocationCoordinate2D(latitude: 29.645568, longitude: -82.348437), currentCount: 0),
-            Garage(name: "McCarty", coordinate: CLLocationCoordinate2D(latitude: 29.645974, longitude: -82.344066), currentCount: 0),
-            Garage(name: "Garage 5", coordinate: CLLocationCoordinate2D(latitude: 29.643310, longitude: -82.351471), currentCount: 0),
-            Garage(name: "Garage 14", coordinate: CLLocationCoordinate2D(latitude: 29.642376, longitude: -82.351335), currentCount: 0),
-            Garage(name: "NPB", coordinate: CLLocationCoordinate2D(latitude: 29.641503, longitude: -82.351335), currentCount: 0),
-            Garage(name: "Garage 13", coordinate: CLLocationCoordinate2D(latitude: 29.640541, longitude: -82.349703), currentCount: 0),
-            Garage(name: "Garage 11", coordinate: CLLocationCoordinate2D(latitude: 29.636293, longitude: -82.368394), currentCount: 0),
-            Garage(name: "Garage 3", coordinate: CLLocationCoordinate2D(latitude: 29.638681, longitude: -82.347755), currentCount: 0),
-            Garage(name: "Garage 10", coordinate: CLLocationCoordinate2D(latitude: 29.640786, longitude: -82.341755), currentCount: 0),
-            Garage(name: "Garage 1", coordinate: CLLocationCoordinate2D(latitude: 29.640989, longitude: -82.342083), currentCount: 0), // converted DMS to decimal
-            Garage(name: "Health East", coordinate: CLLocationCoordinate2D(latitude: 29.640946, longitude: -82.340770), currentCount: 0),
-            Garage(name: "Garage 2", coordinate: CLLocationCoordinate2D(latitude: 29.638830, longitude: -82.346726), currentCount: 0),
-            Garage(name: "Southwest 1", coordinate: CLLocationCoordinate2D(latitude: 29.637171, longitude: -82.368639), currentCount: 0),
-            Garage(name: "Southwest 2", coordinate: CLLocationCoordinate2D(latitude: 29.636731, longitude: -82.364778), currentCount: 0),
-            Garage(name: "Maguire Parking", coordinate: CLLocationCoordinate2D(latitude: 29.640755, longitude: -82.368668), currentCount: 0),
-            Garage(name: "Southwest Tennis", coordinate: CLLocationCoordinate2D(latitude: 29.638010, longitude: -82.367084), currentCount: 0),
-            Garage(name: "Southwest Lot 4", coordinate: CLLocationCoordinate2D(latitude: 29.637503, longitude: -82.367424), currentCount: 0),
-            Garage(name: "Garage 7", coordinate: CLLocationCoordinate2D(latitude: 29.650583, longitude: -82.350972), currentCount: 12), // DMS converted
-            Garage(name: "Stadium 1", coordinate: CLLocationCoordinate2D(latitude: 29.651728, longitude: -82.349180), currentCount: 0),
-            Garage(name: "Stadium 2", coordinate: CLLocationCoordinate2D(latitude: 29.649024, longitude: -82.347825), currentCount: 0),
-            Garage(name: "Stadium 3", coordinate: CLLocationCoordinate2D(latitude: 29.649791, longitude: -82.350006), currentCount: 0),
-            Garage(name: "Tigert Parking", coordinate: CLLocationCoordinate2D(latitude: 29.649380, longitude: -82.340550), currentCount: 0)
-        ]
-        allGarages = garages
-    }
-
     private func addGaragePins(fitAll: Bool = true) {
         mapView.removeAnnotations(mapView.annotations.filter { !($0 is MKUserLocation) })
         for garage in garages {
@@ -231,6 +201,31 @@ class ViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             let pins = self.mapView.annotations.filter { !($0 is MKUserLocation) }
             self.mapView.showAnnotations(pins, animated: true)
+        }
+    }
+
+    private func updateGarage(_ updated: Garage) {
+        if let idx = garages.firstIndex(where: { $0.name == updated.name }) {
+            garages[idx] = updated
+        }
+        if let idx = allGarages.firstIndex(where: { $0.name == updated.name }) {
+            allGarages[idx] = updated
+        }
+        if let annotation = mapView.annotations.first(where: { ($0 as? GarageAnnotation)?.garage.name == updated.name }) as? GarageAnnotation {
+            annotation.garage = updated
+            if let annView = mapView.view(for: annotation) as? MKMarkerAnnotationView {
+                let color = annotation.isFull ? UIColor.systemRed : UIColor.systemBlue
+                annView.markerTintColor = color
+                if let stack = annView.detailCalloutAccessoryView as? UIStackView,
+                   let statusLabel = stack.arrangedSubviews.first as? UILabel,
+                   let progress = stack.arrangedSubviews.last as? UIProgressView {
+                    statusLabel.text = annotation.statusText
+                    progress.progress = annotation.occupancy
+                }
+                annView.annotation = annotation
+            }
+        } else {
+            addGaragePins(fitAll: false)
         }
     }
 
@@ -417,6 +412,7 @@ extension ViewController: MKMapViewDelegate {
                     self.checkedInGarage = garageAnnotation.garage.name
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     self.scheduleCheckoutReminder(for: garageAnnotation.garage)
+                    self.service.checkIn(garageName: garageAnnotation.garage.name)
                 }
             } else {
                 if self.garages[index].currentCount > 0 {
@@ -425,6 +421,7 @@ extension ViewController: MKMapViewDelegate {
                     self.checkedInGarage = nil
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     self.cancelCheckoutReminder()
+                    self.service.checkOut(garageName: garageAnnotation.garage.name)
                 }
             }
 
