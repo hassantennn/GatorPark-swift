@@ -11,7 +11,27 @@ app.use(bodyParser.json());
 let garages = [
   { name: 'Rawlings', latitude: 29.645255, longitude: -82.342954, currentCount: 0, capacity: 12 },
   { name: 'Reitz Garage', latitude: 29.645568, longitude: -82.348437, currentCount: 0, capacity: 12 },
-  { name: 'McCarty', latitude: 29.645974, longitude: -82.344066, currentCount: 0, capacity: 12 }
+  { name: 'McCarty', latitude: 29.645974, longitude: -82.344066, currentCount: 0, capacity: 12 },
+  { name: 'Garage 5', latitude: 29.643310, longitude: -82.351471, currentCount: 0, capacity: 12 },
+  { name: 'Garage 14', latitude: 29.642376, longitude: -82.351335, currentCount: 0, capacity: 12 },
+  { name: 'NPB', latitude: 29.641503, longitude: -82.351335, currentCount: 0, capacity: 12 },
+  { name: 'Garage 13', latitude: 29.640541, longitude: -82.349703, currentCount: 0, capacity: 12 },
+  { name: 'Garage 11', latitude: 29.636293, longitude: -82.368394, currentCount: 0, capacity: 12 },
+  { name: 'Garage 3', latitude: 29.638681, longitude: -82.347755, currentCount: 0, capacity: 12 },
+  { name: 'Garage 10', latitude: 29.640786, longitude: -82.341755, currentCount: 0, capacity: 12 },
+  { name: 'Garage 1', latitude: 29.640989, longitude: -82.342083, currentCount: 0, capacity: 12 },
+  { name: 'Health East', latitude: 29.640946, longitude: -82.340770, currentCount: 0, capacity: 12 },
+  { name: 'Garage 2', latitude: 29.638830, longitude: -82.346726, currentCount: 0, capacity: 12 },
+  { name: 'Southwest 1', latitude: 29.637171, longitude: -82.368639, currentCount: 0, capacity: 12 },
+  { name: 'Southwest 2', latitude: 29.636731, longitude: -82.364778, currentCount: 0, capacity: 12 },
+  { name: 'Maguire Parking', latitude: 29.640755, longitude: -82.368668, currentCount: 0, capacity: 12 },
+  { name: 'Southwest Tennis', latitude: 29.638010, longitude: -82.367084, currentCount: 0, capacity: 12 },
+  { name: 'Southwest Lot 4', latitude: 29.637503, longitude: -82.367424, currentCount: 0, capacity: 12 },
+  { name: 'Garage 7', latitude: 29.650583, longitude: -82.350972, currentCount: 12, capacity: 12 },
+  { name: 'Stadium 1', latitude: 29.651728, longitude: -82.349180, currentCount: 0, capacity: 12 },
+  { name: 'Stadium 2', latitude: 29.649024, longitude: -82.347825, currentCount: 0, capacity: 12 },
+  { name: 'Stadium 3', latitude: 29.649791, longitude: -82.350006, currentCount: 0, capacity: 12 },
+  { name: 'Tigert Parking', latitude: 29.649380, longitude: -82.340550, currentCount: 0, capacity: 12 }
 ];
 
 app.get('/garages', (req, res) => {
