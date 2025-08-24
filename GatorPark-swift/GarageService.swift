@@ -26,13 +26,13 @@ final class GarageService {
             }
 
             guard let data = document.data(),
-                  let capacity = data["capacity"] as? Int,
-                  let currentCount = data["currentCount"] as? Int else {
+                  let capacity = data["Capacity"] as? Int,
+                  let currentCount = data["Currentcount"] as? Int else {
                 return nil
             }
 
             if currentCount < capacity {
-                transaction.updateData(["currentCount": currentCount + 1], forDocument: ref)
+                transaction.updateData(["Currentcount": currentCount + 1], forDocument: ref)
             } else {
                 errorPointer?.pointee = NSError(
                     domain: "GarageService",
@@ -63,12 +63,12 @@ final class GarageService {
             }
 
             guard let data = document.data(),
-                  let currentCount = data["currentCount"] as? Int else {
+                  let currentCount = data["Currentcount"] as? Int else {
                 return nil
             }
 
             let newCount = max(currentCount - 1, 0)
-            transaction.updateData(["currentCount": newCount], forDocument: ref)
+            transaction.updateData(["Currentcount": newCount], forDocument: ref)
             return nil
         }) { (_, error) in
             if let error = error {
