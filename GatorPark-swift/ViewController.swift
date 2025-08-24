@@ -347,7 +347,12 @@ extension ViewController: MKMapViewDelegate {
             let progress = UIProgressView(progressViewStyle: .default)
             progress.progress = garageAnnotation.occupancy
 
-            let stack = UIStackView(arrangedSubviews: [statusLabel, progress])
+            // Display the numeric capacity alongside progress
+            let capacityLabel = UILabel()
+            capacityLabel.font = UIFont.systemFont(ofSize: 12)
+            capacityLabel.text = "\(garageAnnotation.garage.currentCount)/\(garageAnnotation.garage.capacity) spaces"
+
+            let stack = UIStackView(arrangedSubviews: [statusLabel, progress, capacityLabel])
             stack.axis = .vertical
             stack.spacing = 4
             stack.translatesAutoresizingMaskIntoConstraints = false
