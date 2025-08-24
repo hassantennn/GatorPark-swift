@@ -222,7 +222,7 @@ class ViewController: UIViewController {
             addGaragePins(fitAll: false)
         }
     }
-
+    
     private func addZoomButtons() {
         let zoomInButton = UIButton(type: .system)
         zoomInButton.setTitle("+", for: .normal)
