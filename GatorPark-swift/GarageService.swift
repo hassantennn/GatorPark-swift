@@ -12,4 +12,41 @@ final class GarageService {
             onChange(garages)
         }
     }
+
+    func checkIn(to garage: Garage, completion: @escaping (Result<Void, Error>) -> Void) {
+        let ref = db.collection("garages").document(garage.id)
+
+        db.runTransaction({ (transaction, errorPointer) -> Any? in
+            let document: DocumentSnapshot
+            do {
+                document = try transaction.getDocument(ref)
+            } catch let error as NSError {
+                errorPointer?.pointee = error
+                return nil
+            }
+
+            guard let data = document.data(),
+                  let capacity = data["capacity"] as? Int,
+                  let currentCount = data["currentCount"] as? Int else {
+                return nil
+            }
+
+            if currentCount < capacity {
+                transaction.updateData(["currentCount": currentCount + 1], forDocument: ref)
+            } else {
+                errorPointer?.pointee = NSError(
+                    domain: "GarageService",
+                    code: 1,
+                    userInfo: [NSLocalizedDescriptionKey: "Garage is full"]
+                )
+            }
+            return nil
+        }) { (_, error) in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
 }
