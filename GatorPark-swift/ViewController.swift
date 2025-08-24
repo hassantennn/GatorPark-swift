@@ -41,7 +41,8 @@ class ViewController: UIViewController {
             default:
                 availability = "low availability"
             }
-            return "Spaces: \(occupied)/\(capacity) - \(availability)"
+            let percentage = Int(occupancy * 100)
+            return "Spaces: \(occupied)/\(capacity) (\(percentage)% full) - \(availability)"
         }
         /// Fraction of occupied spaces 0.0...1.0
         var occupancy: Float {
@@ -49,16 +50,9 @@ class ViewController: UIViewController {
             return Float(garage.currentCount) / Float(garage.capacity)
         }
 
-        /// Textual status for the current occupancy level.
-        var statusText: String {
-            switch occupancy {
-            case 0..<0.33:
-                return "Empty"
-            case 0..<0.66:
-                return "Moderate"
-            default:
-                return "Busy"
-            }
+        /// Textual percentage for the current occupancy level.
+        var percentageText: String {
+            "\(Int(occupancy * 100))% full"
         }
         var isFull: Bool { garage.currentCount >= garage.capacity }
 
@@ -219,7 +213,7 @@ class ViewController: UIViewController {
                 if let stack = annView.detailCalloutAccessoryView as? UIStackView,
                    let statusLabel = stack.arrangedSubviews.first as? UILabel,
                    let progress = stack.arrangedSubviews.last as? UIProgressView {
-                    statusLabel.text = annotation.statusText
+                    statusLabel.text = annotation.percentageText
                     progress.progress = annotation.occupancy
                 }
                 annView.annotation = annotation
@@ -339,10 +333,10 @@ extension ViewController: MKMapViewDelegate {
             view?.glyphText = "P"
             view?.glyphTintColor = .white
 
-            // Status indicator within callout
+            // Occupancy percentage within callout
             let statusLabel = UILabel()
             statusLabel.font = UIFont.systemFont(ofSize: 12)
-            statusLabel.text = garageAnnotation.statusText
+            statusLabel.text = garageAnnotation.percentageText
 
             let progress = UIProgressView(progressViewStyle: .default)
             progress.progress = garageAnnotation.occupancy
@@ -434,7 +428,7 @@ extension ViewController: MKMapViewDelegate {
                 if let stack = annView.detailCalloutAccessoryView as? UIStackView,
                    let statusLabel = stack.arrangedSubviews.first as? UILabel,
                    let progress = stack.arrangedSubviews.last as? UIProgressView {
-                    statusLabel.text = garageAnnotation.statusText
+                    statusLabel.text = garageAnnotation.percentageText
                     progress.progress = garageAnnotation.occupancy
                 }
             }
