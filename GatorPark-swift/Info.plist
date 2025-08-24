@@ -27,7 +27,11 @@ App Transport Security Settings</key>
 					<string>Main</string>
 				</dict>
 			</array>
-		</dict>
-	</dict>
+        </dict>
+        </dict>
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>This app needs your location to show nearby parking garages.</string>
+        <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+        <string>This app needs your location to provide parking availability near you.</string>
 </dict>
 </plist>
