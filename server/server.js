@@ -21,7 +21,7 @@ let garages = [
   { name: 'Southwest 1', latitude: 29.637171, longitude: -82.368639, currentCount: 0, capacity: 274 },
   { name: 'Southwest Tennis', latitude: 29.638010, longitude: -82.367084, currentCount: 0, capacity: 100 },
   { name: 'Southwest 2', latitude: 29.637503, longitude: -82.367424, currentCount: 0, capacity: 148 },
-  { name: 'Southwest 3', latitude: 29.637003, longitude: -82.367924, currentCount: 0, capacity: 158 },
+  { name: 'Southwest 3', latitude: 29.6395898, longitude: -82.3692964, currentCount: 0, capacity: 158 },
   { name: 'Garage 7', latitude: 29.650583, longitude: -82.350972, currentCount: 12, capacity: 12 },
   { name: 'Stadium 1', latitude: 29.651728, longitude: -82.349180, currentCount: 0, capacity: 12 },
   { name: 'Stadium 2', latitude: 29.649024, longitude: -82.347825, currentCount: 0, capacity: 12 },
