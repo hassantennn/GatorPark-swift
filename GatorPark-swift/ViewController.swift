@@ -4,7 +4,6 @@ import UserNotifications
 
 class ViewController: UIViewController {
 
-    let service = GarageService.shared
     let mapView = MKMapView()
     let searchBar = UISearchBar()
     let suggestionsTableView = UITableView()
@@ -72,7 +71,7 @@ class ViewController: UIViewController {
         setupMap()
         setupSearchBar()
         setupSuggestionsTableView()
-        service.observeGarages { [weak self] garages in
+        GarageService.shared.observeGarages { [weak self] garages in
             self?.garages = garages
             self?.allGarages = garages
             self?.addGaragePins()
@@ -264,6 +263,36 @@ class ViewController: UIViewController {
         center.removeDeliveredNotifications(withIdentifiers: [checkoutReminderID])
     }
 
+    private func didTapCheckIn(for garage: Garage) {
+        GarageService.shared.checkIn(to: garage) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self?.checkedInGarage = garage.name
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    self?.scheduleCheckoutReminder(for: garage)
+                case .failure(let error):
+                    self?.showAlert(title: "Error", message: error.localizedDescription)
+                }
+            }
+        }
+    }
+
+    private func didTapCheckOut(for garage: Garage) {
+        GarageService.shared.checkOut(from: garage) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self?.checkedInGarage = nil
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    self?.cancelCheckoutReminder()
+                case .failure(let error):
+                    self?.showAlert(title: "Error", message: error.localizedDescription)
+                }
+            }
+        }
+    }
+
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
@@ -345,8 +374,7 @@ extension ViewController: MKMapViewDelegate {
     }
 
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        guard let garageAnnotation = view.annotation as? GarageAnnotation,
-              let index = garages.firstIndex(where: { $0.name == garageAnnotation.garage.name }) else { return }
+        guard let garageAnnotation = view.annotation as? GarageAnnotation else { return }
 
         let isCheckIn = control == view.leftCalloutAccessoryView
         if isCheckIn {
@@ -372,35 +400,9 @@ extension ViewController: MKMapViewDelegate {
         alert.addAction(UIAlertAction(title: "Confirm", style: .default) { [weak self] _ in
             guard let self = self else { return }
             if isCheckIn {
-                if self.garages[index].currentCount < self.garages[index].capacity {
-                    self.garages[index].currentCount += 1
-                    garageAnnotation.garage.currentCount = self.garages[index].currentCount
-                    self.checkedInGarage = garageAnnotation.garage.name
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                    self.scheduleCheckoutReminder(for: garageAnnotation.garage)
-                }
+                self.didTapCheckIn(for: garageAnnotation.garage)
             } else {
-                if self.garages[index].currentCount > 0 {
-                    self.garages[index].currentCount -= 1
-                    garageAnnotation.garage.currentCount = self.garages[index].currentCount
-                    self.checkedInGarage = nil
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                    self.cancelCheckoutReminder()
-                }
-            }
-
-            if let annView = self.mapView.view(for: garageAnnotation) as? MKMarkerAnnotationView {
-                let color = garageAnnotation.isFull ? UIColor.systemRed : UIColor.systemBlue
-                annView.markerTintColor = color
-                annView.annotation = garageAnnotation
-                self.mapView.selectAnnotation(garageAnnotation, animated: false)
-
-                if let stack = annView.detailCalloutAccessoryView as? UIStackView,
-                   let statusLabel = stack.arrangedSubviews.first as? UILabel,
-                   let progress = stack.arrangedSubviews.last as? UIProgressView {
-                    statusLabel.text = garageAnnotation.percentageText
-                    progress.progress = garageAnnotation.occupancy
-                }
+                self.didTapCheckOut(for: garageAnnotation.garage)
             }
         })
         present(alert, animated: true)
