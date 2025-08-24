@@ -41,7 +41,8 @@ class ViewController: UIViewController {
             default:
                 availability = "low availability"
             }
-            return "Spaces: \(occupied)/\(capacity) - \(availability)"
+            let percentage = capacity > 0 ? Int((Float(occupied) / Float(capacity)) * 100) : 0
+            return "Spaces: \(occupied)/\(capacity) (\(percentage)% full) - \(availability)"
         }
         /// Fraction of occupied spaces 0.0...1.0
         var occupancy: Float {
@@ -350,7 +351,8 @@ extension ViewController: MKMapViewDelegate {
             // Display the numeric capacity alongside progress
             let capacityLabel = UILabel()
             capacityLabel.font = UIFont.systemFont(ofSize: 12)
-            capacityLabel.text = "\(garageAnnotation.garage.currentCount)/\(garageAnnotation.garage.capacity) spaces"
+            let percent = Int(garageAnnotation.occupancy * 100)
+            capacityLabel.text = "\(garageAnnotation.garage.currentCount)/\(garageAnnotation.garage.capacity) spaces (\(percent)% full)"
 
             let stack = UIStackView(arrangedSubviews: [statusLabel, progress, capacityLabel])
             stack.axis = .vertical

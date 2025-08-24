@@ -38,4 +38,11 @@ struct GatorPark_swiftTests {
         #expect(openView?.backgroundColor == .systemBlue)
     }
 
+    @Test func subtitleIncludesFullnessPercentage() async throws {
+        let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        let garage = ViewController.Garage(name: "Half Full", coordinate: coordinate, currentCount: 6, capacity: 12)
+        let annotation = ViewController.GarageAnnotation(garage: garage)
+        #expect(annotation.subtitle == "Spaces: 6/12 (50% full) - moderate availability")
+    }
+
 }
