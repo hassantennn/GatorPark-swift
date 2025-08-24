@@ -16,6 +16,7 @@ let garages = [
   { name: 'Garage 14', latitude: 29.642376, longitude: -82.351335, currentCount: 0, capacity: 2200 },
   { name: 'NPB', latitude: 29.641503, longitude: -82.351335, currentCount: 0, capacity: 12 },
   { name: 'Garage 13', latitude: 29.640541, longitude: -82.349703, currentCount: 0, capacity: 12 },
+
   { name: 'Garage 11', latitude: 29.636293, longitude: -82.368394, currentCount: 0, capacity: 900 },
   { name: 'Southwest 1', latitude: 29.637171, longitude: -82.368639, currentCount: 0, capacity: 274 },
   { name: 'Southwest Tennis', latitude: 29.638010, longitude: -82.367084, currentCount: 0, capacity: 100 },
