@@ -7,12 +7,26 @@
 
 import UIKit
 import UserNotifications
+import FirebaseCore
+import FirebaseAuth
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     private let notificationCenter = UNUserNotificationCenter.current()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        FirebaseApp.configure()
+
+        if Auth.auth().currentUser == nil {
+            Auth.auth().signInAnonymously { result, error in
+                if let error = error {
+                    print("Firebase Auth error: \(error.localizedDescription)")
+                } else if let user = result?.user {
+                    print("✅ Signed in anonymously with UID: \(user.uid)")
+                }
+            }
+        }
+
         notificationCenter.requestAuthorization(options: [.alert, .sound]) { _, _ in }
         notificationCenter.delegate = self
         return true
