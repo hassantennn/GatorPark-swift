@@ -12,17 +12,16 @@ struct Garage {
 
     init?(from document: DocumentSnapshot) {
         guard let data = document.data(),
-              let name = data["name"] as? String,
-              let latitude = data["latitude"] as? CLLocationDegrees,
-              let longitude = data["longitude"] as? CLLocationDegrees,
-              let capacity = data["capacity"] as? Int,
-              let currentCount = data["currentCount"] as? Int,
-              let isOpen = data["isOpen"] as? Bool else {
+              let name = data["Name"] as? String,
+              let location = data["Location"] as? GeoPoint,
+              let capacity = data["Capacity"] as? Int,
+              let currentCount = data["Currentcount"] as? Int,
+              let isOpen = data["Isopen"] as? Bool else {
             return nil
         }
         self.id = document.documentID
         self.name = name
-        self.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        self.coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
         self.capacity = capacity
         self.currentCount = currentCount
         self.isOpen = isOpen
