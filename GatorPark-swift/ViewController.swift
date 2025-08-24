@@ -72,13 +72,10 @@ class ViewController: UIViewController {
         setupMap()
         setupSearchBar()
         setupSuggestionsTableView()
-        service.fetchGarages { [weak self] garages in
+        service.observeGarages { [weak self] garages in
             self?.garages = garages
             self?.allGarages = garages
             self?.addGaragePins()
-        }
-        service.listenForUpdates { [weak self] garage in
-            self?.updateGarage(garage)
         }
         addZoomButtons()
     }
@@ -198,31 +195,6 @@ class ViewController: UIViewController {
         }
     }
 
-    private func updateGarage(_ updated: Garage) {
-        if let idx = garages.firstIndex(where: { $0.name == updated.name }) {
-            garages[idx] = updated
-        }
-        if let idx = allGarages.firstIndex(where: { $0.name == updated.name }) {
-            allGarages[idx] = updated
-        }
-        if let annotation = mapView.annotations.first(where: { ($0 as? GarageAnnotation)?.garage.name == updated.name }) as? GarageAnnotation {
-            annotation.garage = updated
-            if let annView = mapView.view(for: annotation) as? MKMarkerAnnotationView {
-                let color = annotation.isFull ? UIColor.systemRed : UIColor.systemBlue
-                annView.markerTintColor = color
-                if let stack = annView.detailCalloutAccessoryView as? UIStackView,
-                   let statusLabel = stack.arrangedSubviews.first as? UILabel,
-                   let progress = stack.arrangedSubviews.last as? UIProgressView {
-                    statusLabel.text = annotation.percentageText
-                    progress.progress = annotation.occupancy
-                }
-                annView.annotation = annotation
-            }
-        } else {
-            addGaragePins(fitAll: false)
-        }
-    }
-    
     private func addZoomButtons() {
         let zoomInButton = UIButton(type: .system)
         zoomInButton.setTitle("+", for: .normal)
