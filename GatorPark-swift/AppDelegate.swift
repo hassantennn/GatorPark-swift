@@ -9,12 +9,24 @@ import UIKit
 import UserNotifications
 import FirebaseCore
 import FirebaseAuth
+import FirebaseAppCheck
+
+#if DEBUG
+class DebugAppCheckProviderFactory: AppCheckProviderFactory {
+    override func createProvider(with app: FirebaseApp) -> AppCheckProvider? {
+        return AppCheckDebugProvider(app: app)
+    }
+}
+#endif
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     private let notificationCenter = UNUserNotificationCenter.current()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        #if DEBUG
+        AppCheck.setAppCheckProviderFactory(DebugAppCheckProviderFactory())
+        #endif
         FirebaseApp.configure()
 
         if Auth.auth().currentUser == nil {
