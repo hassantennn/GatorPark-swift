@@ -12,8 +12,8 @@ import FirebaseAuth
 import FirebaseAppCheck
 
 #if DEBUG
-class DebugAppCheckProviderFactory: AppCheckProviderFactory {
-    override func createProvider(with app: FirebaseApp) -> AppCheckProvider? {
+class DebugAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
+    func createProvider(with app: FirebaseApp) -> AppCheckProvider? {
         return AppCheckDebugProvider(app: app)
     }
 }
