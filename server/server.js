@@ -8,6 +8,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+// Garage data defined inline; default.csv removed
 let garages = [
   { name: 'Rawlings', latitude: 29.645255, longitude: -82.342954, currentCount: 0, capacity: 12 },
   { name: 'Reitz Garage', latitude: 29.645568, longitude: -82.348437, currentCount: 0, capacity: 12 },
