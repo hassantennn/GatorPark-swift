@@ -31,8 +31,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         if Auth.auth().currentUser == nil {
             Auth.auth().signInAnonymously { result, error in
-                if let error = error {
-                    print("Firebase Auth error: \(error.localizedDescription)")
+                if let error = error as NSError? {
+                    print("Firebase Auth error: \(error.localizedDescription) (code: \(error.code))")
                 } else if let user = result?.user {
                     print("✅ Signed in anonymously with UID: \(user.uid)")
                 }

@@ -4,7 +4,12 @@ import FirebaseFirestore
 final class GarageService {
     static let shared = GarageService()
     private let db = Firestore.firestore()
-    private init() {}
+
+    private init() {
+        let settings = db.settings
+        settings.isPersistenceEnabled = true
+        db.settings = settings
+    }
 
     func observeGarages(onChange: @escaping ([Garage]) -> Void) {
         db.collection("garages").addSnapshotListener { snapshot, _ in
